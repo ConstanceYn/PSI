@@ -14,12 +14,13 @@ public class TCPServeur{
     while(true){
       try {
         Socket connection = serveur.accept();
-        OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream( ));
-        out.write("Connecté:" +connection+"\r\n");
+        //OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream( ));
+        //out.write("Connecté:" +connection+"\r\n");
+        System.out.println("connexion !");
         connection.close();
       } catch (IOException e) {
         System.err.println("Echec connection");
-      }
+      } 
     }
   }
 
