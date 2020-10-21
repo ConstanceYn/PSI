@@ -1,5 +1,6 @@
 import java.net.*;
 import java.io.*;
+import java.io.BufferedInputStream;
 
 public class TCPServeur{
 
@@ -17,10 +18,15 @@ public class TCPServeur{
         //OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream( ));
         //out.write("Connecté:" +connection+"\r\n");
         System.out.println("connexion !");
+        BufferedOutputStream bos = new BufferedOutputStream(connection.getOutputStream());
+        String str = "bonjour nouveau client";
+
+        bos.write(str.getBytes());
+        bos.flush();
         connection.close();
       } catch (IOException e) {
         System.err.println("Echec connection");
-      } 
+      }
     }
   }
 
