@@ -17,6 +17,28 @@ public class Annonce {
         prix = p;
         id = i;
     }
+
+    // getters
+    public String getDomaine(){
+      return this.domaine;
+    }
+
+    public String getTitre(){
+      return this.titre;
+    }
+
+    public String getDescriptif(){
+      return this.descriptif;
+    }
+
+    public float getPrix(){
+      return this.prix;
+    }
+
+    public int getId(){
+      return this.id;
+    }
+
     // créer une annonce à partir de l'entrée utilisateur
     public Annonce(){
         Scanner inFromUser = new Scanner(System.in);
