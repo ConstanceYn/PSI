@@ -60,11 +60,18 @@ public class Message{
     return new Message("POST_ANC_KO", new String[0]);
   }
 
-  public static Message MAJ_ANC(Annonce a){ // on devra donner une version mise à jour de l'annonce en argument
+  public static Message majAnc(Annonce a){ // on devra donner une version mise à jour de l'annonce en argument
     String[] args = {Integer.toString(a.id), a.domaine, a.titre, a.descriptif, Float.toString(a.prix)};
     return new Message("MAJ_ANC", args);
   }
 
-  
+  public static Message majAncOk(int id){
+    String[] args = {Integer.toString(id)};
+    return new Message("MAJ_ANC_OK", args);
+  }
+
+  public static Message postAncKo(){
+    return new Message("MAJ_ANC_KO", new String[0]);
+  }
 
 }
