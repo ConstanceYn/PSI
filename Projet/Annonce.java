@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 
 public class Annonce {
+
     private String domaine;
     private String titre;
     private String descriptif;
@@ -18,6 +19,15 @@ public class Annonce {
         prix = p;
         id = i;
         user = u;
+    }
+
+    public Annonce(Message m){
+      domaine = m.getArgs()[0];
+      titre = m.getArgs()[1];
+      descriptif = m.getArgs()[2];
+      prix = Float.parseFloat(m.getArgs()[3]);
+      id = -1;
+      user = null;
     }
 
 
@@ -41,9 +51,8 @@ public class Annonce {
         System.out.print("prix : ");
         prix = inFromUser.nextFloat();
 
+        // l'id et l'user ne sont pas encore set
         id = -1;
-        // l'id n'est pas encore set
-
         user = null;
     }
 

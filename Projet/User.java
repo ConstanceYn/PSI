@@ -43,6 +43,15 @@ public class User
 
   // connection
 
+  public void set_connect(){
+    this.connected = true;
+  }
   // deconnection
+  public void set_deconnect()
+  {
+    this.connected = false;
+  }
+
+
 
 }

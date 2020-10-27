@@ -25,6 +25,13 @@ public class Message{
     return (split.length > 1 && split[split.length - 1] == ".");
   }
 
+  public String getType() {
+    return this.type;
+  }
+
+  public String[] getArgs(){
+    return this.args;
+  }
   // Transforme une string message en un Message
   public static Message strToMessage(String s){
     if (isMessageShaped(s)){
@@ -90,7 +97,7 @@ public class Message{
 
   // Version demandant à l'utilisateur d'écrire les infos :)
   public static Message postAnc(){
-    Annonce a = new Annonce()
+    Annonce a = new Annonce();
     String[] args = {a.getDomaine(), a.getTitre(), a.getDescriptif(), Float.toString(a.getPrix())};
     return new Message("POST_ANC", args);
   }

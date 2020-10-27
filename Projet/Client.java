@@ -27,6 +27,8 @@ public class Client{
       // 0 ==> port de réponse, 0 = n'importe lequel.
       // Socket soc4 = new Socket("localhost:1027", 1027, localhost, 0);
       System.out.println("Port de communication côté serveur : " + soc.getPort());
+
+
       BufferedInputStream bis = new BufferedInputStream(soc.getInputStream());
       String content = "";
       int stream;
@@ -34,7 +36,7 @@ public class Client{
         //content += (char)stream;
         System.out.print((char)stream);
       }
-      //On affiche la page !
+      
       //System.out.println("message du serveur = " + content);
     }
     catch (UnknownHostException e){

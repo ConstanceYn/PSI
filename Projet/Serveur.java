@@ -2,42 +2,42 @@ import java.net.*;
 import java.io.*;
 import java.util.ArrayList;
 
-public class Serveur{
+public class Serveur {
 
-  public static void main(String[] args){
-    ArrayList annonces = ArrayList();
-    int port = 1027;
-    ServerSocket serveur = null;
-    try {
-      serveur = new ServerSocket(port);
-    } catch (IOException e) {
-      System.err.println("Echec création socket");
-    }
-    int nbrConnections = 0;
-    while(true){
-      try {
-        Socket connection = serveur.accept();
-        //OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream( ));
-        //out.write("Connecté:" +connection+"\r\n");
-        System.out.println("connexion !");
-        //BufferedOutputStream bos = new BufferedOutputStream(connection.getOutputStream());
-        //String str = "bonjour nouveau client";
-        //bos.write(str.getBytes());
-        //bos.flush();
-        SocketRun connectRun = new SocketRun(connection);
-        Thread t = new Thread(connectRun);
-        t.start();
-        //connection.close();
-      } catch (IOException e) {
-        System.err.println("Echec connection");
-      }
-    }
+  ArrayList annonces;
+  int nbAnn;
+  ArrayList utilisateurs;
+
+  public Serveur(){
+    annonces = new ArrayList();
+    nbAnn = 1;
+    utilisateurs = new ArrayList();
   }
 
-  static public void parse(String cmd)
+  public void add_Annonce(Annonce a)
   {
-    Message message = strToMessage(cmd);
-    
+    annonces.add(a);
+    nbAnn++;
+  }
+
+  public void add_User(User u)
+  {
+    utilisateurs.add(u);
+  }
+
+  // juste pour le test
+  // public void add()
+  // {
+  //   nbAnn ++;
+  // }
+
+  public int get_nbAnn()
+  {
+    return this.nbAnn;
+  }
+  public ArrayList get_Ann()
+  {
+    return this.annonces;
   }
 
 }
