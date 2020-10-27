@@ -9,15 +9,15 @@ public class Annonce {
     private String descriptif;
     private float prix;
     private int id;
-    // ip
-    // utilisateur
+    private User user;
 
-    public Annonce(String d, String t, String des, float p, int i){
+    public Annonce(String d, String t, String des, float p, int i, User u){
         domaine = d;
         titre = t;
         descriptif = des;
         prix = p;
         id = i;
+        user = u;
     }
 
 
@@ -43,6 +43,8 @@ public class Annonce {
 
         id = -1;
         // l'id n'est pas encore set
+
+        user = null;
     }
 
     // setter (et oui il faut les mettre aussi parce qu'on peut modifier une annonce)
@@ -86,7 +88,9 @@ public class Annonce {
       return this.id;
     }
 
-        // ip + utilisateur
+    public User getUser(){
+      return this.user;
+    }
 
 
     // pour la commande send_domaine
@@ -99,16 +103,14 @@ public class Annonce {
     // quand un client envoie une nouvelle annonce au serveur
     public String Annonce_to_Client()
     {
-        String str = new String();
-        str = this.id+"\n"+this.domaine + "\n"+ this.titre + "\n"+ this.descriptif + "\n" + Float.toString(this.prix)+ "\n.\n";
-        return str;
+        return Message.postAnc(this).messageToStr();
     }
 
-    // quand le serveur envoie les annonces au client
+    // quand le serveur envoie les annonces au client (utile pour lister une réponse listant des annonces)
     public String Annonce_to_Serveur()
     {
         String str = new String();
-        str = this.domaine + "\n"+ this.titre + "\n"+ this.descriptif + "\n" + Float.toString(this.prix)+ "\n.\n";
+        str = this.domaine + "\n"+ this.titre + "\n"+ this.descriptif + "\n" + Float.toString(this.prix)+ "\n";
         return str;
     }
 

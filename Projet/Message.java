@@ -44,6 +44,16 @@ public class Message{
   // Fonctions static créant différent type de message
   // Je sais pas si je les laisse là ou fait une class à part que de fonctions static
 
+  public static Message connect(String utilisateur){ // version possible demandant d'entrer l'info à l'utilisateur ?
+    String[] args = {utilisateur};
+    return new Message("CONNECT", args);
+  }
+
+  public static Message connect(int token){
+    String[] args = {"#" + Integer.toString(token)};
+    return new Message("CONNECT", args);
+  }
+
   public static Message connectOk(){
     return new Message("CONNECT_OK", new String[0]);
   }
@@ -72,7 +82,15 @@ public class Message{
 
   // Juste un commentaire pour qu'on se rappel de modifier cette fonction
   //quand on aura mieux fait Annonce
+  // La fonction suivante est peut-être plus interessante alors ^^
   public static Message postAnc(Annonce a){
+    String[] args = {a.getDomaine(), a.getTitre(), a.getDescriptif(), Float.toString(a.getPrix())};
+    return new Message("POST_ANC", args);
+  }
+
+  // Version demandant à l'utilisateur d'écrire les infos :)
+  public static Message postAnc(){
+    Annonce a = new Annonce()
     String[] args = {a.getDomaine(), a.getTitre(), a.getDescriptif(), Float.toString(a.getPrix())};
     return new Message("POST_ANC", args);
   }
