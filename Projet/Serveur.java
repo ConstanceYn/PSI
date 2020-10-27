@@ -1,9 +1,11 @@
 import java.net.*;
 import java.io.*;
+import java.util.ArrayList;
 
 public class Serveur{
 
   public static void main(String[] args){
+    ArrayList annonces = ArrayList();
     int port = 1027;
     ServerSocket serveur = null;
     try {
@@ -30,6 +32,12 @@ public class Serveur{
         System.err.println("Echec connection");
       }
     }
+  }
+
+  static public void parse(String cmd)
+  {
+    Message message = strToMessage(cmd);
+    
   }
 
 }

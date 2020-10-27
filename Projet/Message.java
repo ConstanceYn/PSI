@@ -69,6 +69,9 @@ public class Message{
     return new Message("DISCONNECT", new String[0]);
   }
 
+
+  // Juste un commentaire pour qu'on se rappel de modifier cette fonction
+  //quand on aura mieux fait Annonce
   public static Message postAnc(Annonce a){
     String[] args = {a.getDomaine(), a.getTitre(), a.getDescriptif(), Float.toString(a.getPrix())};
     return new Message("POST_ANC", args);
@@ -83,6 +86,9 @@ public class Message{
     return new Message("POST_ANC_KO", new String[0]);
   }
 
+
+  // Pareil que plus haut !!!
+  //
   public static Message majAnc(Annonce a){ // on devra donner une version mise à jour de l'annonce en argument
     String[] args = {Integer.toString(a.getId()), a.getDomaine(), a.getTitre(), a.getDescriptif(), Float.toString(a.getPrix())};
     return new Message("MAJ_ANC", args);
