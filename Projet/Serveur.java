@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Serveur {
 
-  ArrayList annonces;
+  ArrayList<Annonce> annonces;
   int nbAnn;
   ArrayList utilisateurs;
 
@@ -35,7 +35,7 @@ public class Serveur {
   {
     return this.nbAnn;
   }
-  public ArrayList get_Ann()
+  public ArrayList<Annonce> get_Ann()
   {
     return this.annonces;
   }

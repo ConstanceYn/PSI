@@ -47,7 +47,7 @@ public class SocketRun implements Runnable {
   }
 
   static public void parse(String cmd, Serveur s) {
-    Message message = strToMessage(cmd);
+    Message message = Message.strToMessage(cmd);
     String commande = message.getType();
     switch(commande) {
       case "CONNECT":
@@ -87,7 +87,7 @@ public class SocketRun implements Runnable {
 
   public static void req_annonce(Serveur s)
   {
-    for (int i = 0; i< s.get_Ann().Size();i++ )
+    for (int i = 0; i< s.get_Ann().size();i++ )
     {
       Annonce ann = s.get_Ann().get(i);
       String str = ann.Annonce_to_Client();
