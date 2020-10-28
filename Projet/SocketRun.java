@@ -20,25 +20,28 @@ public class SocketRun implements Runnable {
           // le serveur envoie un message au client
           BufferedOutputStream bos = new BufferedOutputStream(connection.getOutputStream());
           //serveur.add();
-          String str = "bonjour nouveau client ";
+          String str = "bonjour nouveau client.";
           bos.write(str.getBytes());
           bos.flush();
 
           // le serveur reçoit un message du client
           BufferedInputStream bis = new BufferedInputStream(connection.getInputStream());
           String content = "";
-          int stream;
-          while((stream = bis.read()) != -1){
+          char stream;
+          while((stream = (char)bis.read()) != '.'){
             content += (char)stream;
           }
+          content += ".\n";
+          System.out.println(content);
           //System.out.print((char)stream);
           parse(content, serveur);
 
           // 1 minute off
-          Thread.sleep(60000);
+          //Thread.sleep(60000);
+          Thread.sleep(60);
 
         } catch (IOException e) {
-          System.err.println("Echec connection write");
+          //System.err.println("Echec connection write");
         }
       }
     }catch(InterruptedException e){
@@ -49,6 +52,7 @@ public class SocketRun implements Runnable {
   static public void parse(String cmd, Serveur s) {
     Message message = Message.strToMessage(cmd);
     String commande = message.getType();
+    System.out.println(commande);
     switch(commande) {
       case "CONNECT":
         break;
