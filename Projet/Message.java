@@ -22,7 +22,8 @@ public class Message{
   // Regarde si String a la forme d'un message (au moins un type même si inconnu et finit par .)
   public static boolean isMessageShaped(String s){
     String[] split = s.split("\n");
-    return (split.length > 1 && split[split.length - 1] == ".");
+    //return (split.length > 1 && split[split.length - 1] == "."); bug :(
+    return (split.length > 1);
   }
 
   public String getType() {
@@ -57,7 +58,7 @@ public class Message{
   }
 
   public static Message connect(int token){
-    String[] args = {"#" + Integer.toString(token)};
+    String[] args = {Integer.toString(token)};
     return new Message("CONNECT", args);
   }
 

@@ -1,8 +1,11 @@
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.PrintWriter;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Scanner;
 
 
 public class Client{
@@ -28,7 +31,6 @@ public class Client{
       // Socket soc4 = new Socket("localhost:1027", 1027, localhost, 0);
       System.out.println("Port de communication côté serveur : " + soc.getPort());
 
-
       BufferedInputStream bis = new BufferedInputStream(soc.getInputStream());
       String content = "";
       int stream;
@@ -36,7 +38,34 @@ public class Client{
         //content += (char)stream;
         System.out.print((char)stream);
       }
-      
+
+      // Demande de connection en bonne et due forme
+      BufferedOutputStream bos = new BufferedOutputStream(soc.getOutputStream());
+      String message;
+      Scanner inFromUser = new Scanner(System.in);
+      System.out.print("\nVeuillez indiquer votre nom d'utilisateur (première connection)\nOu votre #token (pensez au #) :\n");
+      String sentence = inFromUser.nextLine();
+      message = Message.connect(sentence).messageToStr();
+      System.out.println(message);
+      bos.write(message.getBytes());
+      bos.flush();
+
+      System.out.println("\nQuevoulez-vous faire ? (1 -> envoyer annonce, q -> déconnexion)\n");
+      String action = inFromUser.nextLine();
+      switch(action) {
+        case "1":
+          message = Message.postAnc().messageToStr();
+          bos.write(message.getBytes());
+          bos.flush();
+          break;
+        case "q":
+          break;
+        default :
+          System.out.println("Action inconnue");
+          break ;
+      }
+
+
       //System.out.println("message du serveur = " + content);
     }
     catch (UnknownHostException e){

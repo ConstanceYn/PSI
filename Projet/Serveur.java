@@ -6,7 +6,7 @@ public class Serveur {
 
   ArrayList<Annonce> annonces;
   int nbAnn;
-  ArrayList utilisateurs;
+  ArrayList<User> utilisateurs;
 
   public Serveur(){
     annonces = new ArrayList();

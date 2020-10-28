@@ -19,7 +19,7 @@ public class SocketRun implements Runnable {
       try{
         BufferedOutputStream bos = new BufferedOutputStream(connection.getOutputStream());
         //serveur.add();
-        String str = "bonjour nouveau client ";
+        String str = "bonjour nouveau client.";
         bos.write(str.getBytes());
         bos.flush();
       } catch (IOException e) {

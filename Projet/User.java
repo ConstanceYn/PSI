@@ -11,11 +11,11 @@ public class User
   private boolean connected; // je le mets pour l'instant, on verra plus tard si on le retire
 
   // constructeur
-  public User(String utilisateur, int token, InetAddress ip, boolean connected){
+  public User(String utilisateur, int token, InetAddress ip){
     this.utilisateur = utilisateur;
     this.token = token;
     this.ip = ip;
-    this.connected = connected;
+    this.connected = true;
   }
 
   // getters
