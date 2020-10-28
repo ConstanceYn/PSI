@@ -15,14 +15,20 @@ public class SocketRun implements Runnable {
 
   public void run(){
     try{
-      for(;;){
+      boolean continuer = true;
+      try{
+        BufferedOutputStream bos = new BufferedOutputStream(connection.getOutputStream());
+        //serveur.add();
+        String str = "bonjour nouveau client ";
+        bos.write(str.getBytes());
+        bos.flush();
+      } catch (IOException e) {
+       System.err.println("Echec connection write");
+       continuer = false;
+      }
+      while(continuer){
         try {
           // le serveur envoie un message au client
-          BufferedOutputStream bos = new BufferedOutputStream(connection.getOutputStream());
-          //serveur.add();
-          String str = "bonjour nouveau client ";
-          bos.write(str.getBytes());
-          bos.flush();
 
           // le serveur reçoit un message du client
           BufferedInputStream bis = new BufferedInputStream(connection.getInputStream());
@@ -32,13 +38,14 @@ public class SocketRun implements Runnable {
             content += (char)stream;
           }
           //System.out.print((char)stream);
-          parse(content, serveur);
+          continuer = parse(content, serveur, connection);
 
           // 1 minute off
           Thread.sleep(60000);
 
         } catch (IOException e) {
           System.err.println("Echec connection write");
+          continuer = false;
         }
       }
     }catch(InterruptedException e){
@@ -46,13 +53,14 @@ public class SocketRun implements Runnable {
     }
   }
 
-  static public void parse(String cmd, Serveur s) {
+  static public boolean parse(String cmd, Serveur s, Socket c) {
     Message message = Message.strToMessage(cmd);
     String commande = message.getType();
     switch(commande) {
       case "CONNECT":
         break;
       case "DISCONNECT":
+        return false;
         break;
       case "POST_ANC":
         annonce(message, s);
@@ -74,6 +82,7 @@ public class SocketRun implements Runnable {
         // UNKNOWN_REQUEST
         break ;
     }
+    return true;
 
   }
 
