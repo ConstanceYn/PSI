@@ -11,20 +11,16 @@ public class TCPServeur{
     } catch (IOException e) {
       System.err.println("Echec création socket");
     }
-    int nbrConnections = 0;
+    Compteur cmp = new Compteur();
     while(true){
       try {
         Socket connection = serveur.accept();
-        //OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream( ));
-        //out.write("Connecté:" +connection+"\r\n");
         System.out.println("connexion !");
-        //BufferedOutputStream bos = new BufferedOutputStream(connection.getOutputStream());
-        //String str = "bonjour nouveau client";
-        //bos.write(str.getBytes());
-        //bos.flush();
-        SocketRun connectRun = new SocketRun(connection);
+
+        SocketRun connectRun = new SocketRun(connection, cmp);
         Thread t = new Thread(connectRun);
         t.start();
+
         //connection.close();
       } catch (IOException e) {
         System.err.println("Echec connection");
