@@ -2,6 +2,7 @@ import java.net.*;
 import java.io.*;
 import java.io.BufferedInputStream;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class SocketRun implements Runnable {
   private Socket connection;
@@ -15,30 +16,54 @@ public class SocketRun implements Runnable {
 
   public void run(){
     try{
-      boolean continuer = true;
-      try{
-        BufferedOutputStream bos = new BufferedOutputStream(connection.getOutputStream());
-        //serveur.add();
-        String str = "bonjour nouveau client.";
-        bos.write(str.getBytes());
-        bos.flush();
+      BufferedReader networkIn = null;
+      PrintWriter writer = null;
+
+      boolean continuer = false;
+       try{
+        // le serveur envoie un message de bienvenue au client
+        writer = new PrintWriter(connection.getOutputStream());
+
+        String str = "Bonjour !! Bienvenue sur Good Duck";
+        writer.println(str);
+        writer.flush();
+
+
+        String intro = "Entrez le nombre de la requete que vous voulez executer :\n";
+        String un = "> 1 : Connection\n";
+        String deux = "> 2 : Poster une annonce\n";
+        String trois = "> 3 : Modifier une annonce \n";
+        String quatre = "> 4 : Suppimer une annonce \n";
+        String cing = "> 5 : Afficher les domaines \n";
+        String six = "> 6 : Afficher les annonces d'un domaine \n";
+        String sept = "> 7 : Afficher ses annonces ";
+        String cmd = intro + deux + six;
+
+        writer.println(cmd);
+        writer.flush();
+        System.out.println("on a envoye les commandes");
+
+        // provisoir, une sorte de pansement quoi
+        writer.close();
+
       } catch (IOException e) {
-       System.err.println("Echec connection write");
-       continuer = false;
+       System.err.println("Echec connection write 1");
       }
+
       while(continuer){
         try {
-          // le serveur envoie un message au client
+          // on écoute le message du client
+          networkIn = new BufferedReader( new InputStreamReader(connection.getInputStream()));
 
-          // le serveur reçoit un message du client
-          BufferedInputStream bis = new BufferedInputStream(connection.getInputStream());
-          String content = "";
-          int stream;
-          while((stream = bis.read()) != -1){
-            content += (char)stream;
+          String content = networkIn.readLine();
+          String msg = "";
+          while(content != null){
+            msg += content + "\n";
+            content = networkIn.readLine();
+            //System.out.println(content);
           }
-          //System.out.print((char)stream);
-          continuer = parse(content, serveur, connection);
+          System.out.println(msg);
+          //continuer = parse(content, serveur, connection);
 
           // 1 minute off
           Thread.sleep(60000);
@@ -61,7 +86,6 @@ public class SocketRun implements Runnable {
         break;
       case "DISCONNECT":
         return false;
-        break;
       case "POST_ANC":
         annonce(message, s);
         break;
@@ -72,7 +96,7 @@ public class SocketRun implements Runnable {
       case "REQUEST_DOMAIN":
         break;
       case "REQUEST_ANC":
-        req_annonce(s);
+        req_annonce(message, s);
         break;
       case "REQUEST_OWN_ANC":
         break;
@@ -94,13 +118,16 @@ public class SocketRun implements Runnable {
     System.out.println("annonce ok");
   }
 
-  public static void req_annonce(Serveur s)
+  public static void req_annonce(Message m, Serveur s)
   {
     for (int i = 0; i< s.get_Ann().size();i++ )
     {
       Annonce ann = s.get_Ann().get(i);
-      String str = ann.Annonce_to_Client();
-      System.out.println(str);
+      if (ann.is_domaine(m.getArgs()[0]))
+      {
+        String str = ann.Annonce_to_Client();
+        System.out.println(str);
+      }
     }
   }
 }

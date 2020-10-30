@@ -9,9 +9,9 @@ public class Serveur {
   ArrayList<User> utilisateurs;
 
   public Serveur(){
-    annonces = new ArrayList();
+    annonces = new ArrayList<Annonce>();
     nbAnn = 1;
-    utilisateurs = new ArrayList();
+    utilisateurs = new ArrayList<User>();
   }
 
   public void add_Annonce(Annonce a)

@@ -4,22 +4,28 @@ public class test{
 
     public static void main(String[] args) {
 
-        Annonce anc = new Annonce();
-  
-        String test = anc.getDomaine();
-        String str = anc.Annonce_to_Client();
-        System.out.println();
-        System.out.println(str);
-
-        switch(test){
-          case "meuble":
-            System.out.println("c'est un meuble");
-            break;
-          default :
-            System.out.println("fuck u");
-            break;
-        }
+        // Annonce anc = new Annonce();
         //
+        // String test = anc.getDomaine();
+        // String str = anc.Annonce_to_Client();
+        // System.out.println();
+        // System.out.println(str);
+        //
+        // switch(test){
+        //   case "meuble":
+        //     System.out.println("c'est un meuble");
+        //     break;
+        //   default :
+        //     System.out.println("fuck u");
+        //     break;
+        // }
+        //
+
+        String a = null;
+        if(a !=null)
+          System.out.println("ok");
+        else
+          System.out.println("null");
 
 
         // int b = 13;
