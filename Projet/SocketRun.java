@@ -19,7 +19,7 @@ public class SocketRun implements Runnable {
       BufferedReader networkIn = null;
       PrintWriter writer = null;
 
-      boolean continuer = false;
+      boolean continuer = true;
        try{
         // le serveur envoie un message de bienvenue au client
         writer = new PrintWriter(connection.getOutputStream());
@@ -36,15 +36,17 @@ public class SocketRun implements Runnable {
         String quatre = "> 4 : Suppimer une annonce \n";
         String cing = "> 5 : Afficher les domaines \n";
         String six = "> 6 : Afficher les annonces d'un domaine \n";
-        String sept = "> 7 : Afficher ses annonces ";
-        String cmd = intro + deux + six;
+        String sept = "> 7 : Afficher ses annonces \n";
+        String cmd = "\n" +intro + deux + six + ".\n";
 
-        writer.println(cmd);
+        writer.write(cmd);
         writer.flush();
         System.out.println("on a envoye les commandes");
+        // writer.println("");
+        // writer.flush();
 
-        // provisoir, une sorte de pansement quoi
-        writer.close();
+        // provisoir, une sorte de pansement quoi parce que sinon il veut pas flush
+        // writer.close();
 
       } catch (IOException e) {
        System.err.println("Echec connection write 1");
@@ -53,7 +55,8 @@ public class SocketRun implements Runnable {
       while(continuer){
         try {
           // on écoute le message du client
-          networkIn = new BufferedReader( new InputStreamReader(connection.getInputStream()));
+          networkIn = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+          System.out.println("test read please");
 
           String content = networkIn.readLine();
           String msg = "";
@@ -63,14 +66,14 @@ public class SocketRun implements Runnable {
             //System.out.println(content);
           }
           System.out.println(msg);
-          //continuer = parse(content, serveur, connection);
+          continuer = parse(msg, serveur, connection);
 
           // 1 minute off
           Thread.sleep(60000);
 
         } catch (IOException e) {
-          System.err.println("Echec connection write");
-          continuer = false;
+          //System.err.println("Echec connection read");
+          //continuer = false;
         }
       }
     }catch(InterruptedException e){
@@ -120,6 +123,8 @@ public class SocketRun implements Runnable {
 
   public static void req_annonce(Message m, Serveur s)
   {
+    System.out.println("req annonce ?");
+    System.out.println(s.get_Ann().size());
     for (int i = 0; i< s.get_Ann().size();i++ )
     {
       Annonce ann = s.get_Ann().get(i);

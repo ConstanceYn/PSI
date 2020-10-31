@@ -24,13 +24,13 @@ public class SocketRun implements Runnable {
             pw.print(content);
             pw.flush();
             Thread.sleep(10000);
-            System.out.println("socket closed : " + connection.isBound());
+            //System.out.println("socket closed : " + connection.isBound());
           }
           // BON En gros on arrive bien à incrémenter le compteur
           // mais quand le client quitte le serveur ne le sait pas
           // du coup on arrive pas à décrementer le compteur :(
 
-          
+
           // System.out.println("deco");
           //pw.close();
 

@@ -34,20 +34,57 @@ public class Client{
 
 
       // liste des requetes possibles :
-      String content = null;
+      String content = "";
       String requetes = "";
-      while( (content = networkIn.readLine()) != null){
+      while( !content.equals(".") ){
+        content = networkIn.readLine();
         requetes += content + "\n";
       }
+      System.out.println("sorti du while de ces morts");
+      //System.out.println(requetes);
 
+      writer = new PrintWriter(soc.getOutputStream());
 
       // on envoie des requetes au serveur
       boolean continuer = true;
       while(continuer)
       {
         System.out.println(requetes);
+        int action = userIn.read()-'0';
+        //System.out.println(action);
+        switch(action) {
+          case 1: // Connection
+            break;
+
+          case 2: // poster une annonce
+            String message = Message.postAnc().messageToStr();
+            System.out.println(message);
+            writer.println(message);
+            writer.flush();
+
+            break;
+          // case 3: //modifier une annonce
+          //   break;
+          // case 4: // Suppimer une annonce
+          //   break;
+          // case 5: // Afficher les domaines
+          //   break;
+          case 6: // Afficher les annonces d'un domaine (version provisoire, toutes les annonces)
+            writer.println("REQUEST_ANC\n.\n");
+            writer.flush();
+
+            break;
+          // case 7: // Afficher ses annones
+          //   break;
+
+          default :
+            System.out.println("Action inconnue");
+            break ;
+        }
+
 
         continuer = false;
+
 
       }
 
@@ -61,25 +98,11 @@ public class Client{
       // System.out.println(message);
       // bos.write(message.getBytes());
       // bos.flush();
-      //
-      // System.out.println("\nQuevoulez-vous faire ? (1 -> envoyer annonce, q -> déconnexion)\n");
-      // String action = inFromUser.nextLine();
-      // switch(action) {
-      //   case "1":
-      //     message = Message.postAnc().messageToStr();
-      //     bos.write(message.getBytes());
-      //     bos.flush();
-      //     break;
-      //   case "q":
-      //     break;
-      //   default :
-      //     System.out.println("Action inconnue");
-      //     break ;
-      // }
+
 
 
       //System.out.println("message du serveur = " + content);
-
+      //writer.close();
       soc.close();
     }
     catch (UnknownHostException e){
