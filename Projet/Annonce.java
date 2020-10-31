@@ -21,6 +21,7 @@ public class Annonce {
         user = u;
     }
 
+    // Construire une annonce à partir du message du client
     public Annonce(Message m){
       domaine = m.getArgs()[0];
       titre = m.getArgs()[1];
@@ -101,6 +102,31 @@ public class Annonce {
       return this.user;
     }
 
+    public String getArgs(int i){
+      String str = null;
+      switch (i){
+        case 0 :
+          str = Integer.toString(id);
+          break;
+        case 1 :
+          str = domaine;
+          break;
+        case 2 :
+          str = titre;
+          break;
+        case 3:
+          str = descriptif;
+          break;
+        case 4:
+          str = Float.toString(prix);
+          break;
+        default:
+          str = "";
+          break;
+      }
+      return str;
+    }
+
 
     // pour la commande send_domaine
     public boolean is_domaine(String d)
@@ -110,16 +136,16 @@ public class Annonce {
 
 
     // quand un client envoie une nouvelle annonce au serveur
-    public String Annonce_to_Client()
+    public String Annonce_from_Client()
     {
         return Message.postAnc(this).messageToStr();
     }
 
     // quand le serveur envoie les annonces au client (utile pour lister une réponse listant des annonces)
-    public String Annonce_to_Serveur()
+    public String Annonce_from_Serveur()
     {
         String str = new String();
-        str = this.domaine + "\n"+ this.titre + "\n"+ this.descriptif + "\n" + Float.toString(this.prix)+ "\n";
+        str = this.id + "\n" + this.domaine + "\n"+ this.titre + "\n"+ this.descriptif + "\n" + Float.toString(this.prix)+ "\n";
         return str;
     }
 

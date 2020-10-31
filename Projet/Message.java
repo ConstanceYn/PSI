@@ -164,6 +164,19 @@ public class Message{
     return new Message("SEND_ANC_OK", annonces);
   }
 
+  public static Message sendAncOk(Annonce[] annonces){
+    int size_Ann = annonces.length;
+    int taille = 5*size_Ann;
+    String[] arg = new String [taille];
+    for (int i=0;i< size_Ann; i++) {
+      for (int j=0; j<5; j++) {
+          arg[ (i*5) +j] = annonces[i].getArgs(j);
+      }
+    }
+    //Message(String type, String[] args);
+    return new Message("SEND_ANC_OK", arg);
+  }
+
   public static Message sendAncKo(){
     return new Message("SEND_ANC_KO", new String[0]);
   }

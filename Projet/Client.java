@@ -58,7 +58,7 @@ public class Client{
 
           case 2: // poster une annonce
             String message = Message.postAnc().messageToStr();
-            System.out.println(message);
+            //System.out.println(message);
             writer.println(message);
             writer.flush();
 
@@ -81,6 +81,16 @@ public class Client{
             System.out.println("Action inconnue");
             break ;
         }
+
+        System.out.println("sorti du switch : on attend la réponse");
+        content = "";
+        String reponse = "";
+        while( !content.equals(".") ){
+          content = networkIn.readLine();
+          reponse += content + "\n";
+        }
+        System.out.println("reponse du serveur : ");
+        System.out.println(reponse);
 
 
         continuer = false;

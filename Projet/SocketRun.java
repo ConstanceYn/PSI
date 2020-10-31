@@ -58,11 +58,11 @@ public class SocketRun implements Runnable {
           networkIn = new BufferedReader(new InputStreamReader(connection.getInputStream()));
           System.out.println("test read please");
 
-          String content = networkIn.readLine();
+          String content = "";
           String msg = "";
-          while(content != null){
-            msg += content + "\n";
+          while(!content.equals(".")){
             content = networkIn.readLine();
+            msg += content + "\n";
             //System.out.println(content);
           }
           System.out.println(msg);
@@ -81,16 +81,18 @@ public class SocketRun implements Runnable {
     }
   }
 
-  static public boolean parse(String cmd, Serveur s, Socket c) {
+  public boolean parse(String cmd, Serveur s, Socket c) {
     Message message = Message.strToMessage(cmd);
     String commande = message.getType();
+
+    Message reponse = null;
     switch(commande) {
       case "CONNECT":
         break;
       case "DISCONNECT":
         return false;
       case "POST_ANC":
-        annonce(message, s);
+        reponse = this.annonce(message, s);
         break;
       case "MAJ_ANC":
         break;
@@ -99,7 +101,7 @@ public class SocketRun implements Runnable {
       case "REQUEST_DOMAIN":
         break;
       case "REQUEST_ANC":
-        req_annonce(message, s);
+        reponse = this.req_annonce(message, s);
         break;
       case "REQUEST_OWN_ANC":
         break;
@@ -109,30 +111,57 @@ public class SocketRun implements Runnable {
         // UNKNOWN_REQUEST
         break ;
     }
+    String rep = reponse.messageToStr();
+    System.out.println(rep);
+    try {
+      System.out.println("on envoie la réponse");
+      PrintWriter writer = new PrintWriter(connection.getOutputStream());
+      writer.println(rep);
+      writer.flush();
+      writer.close();
+      System.out.println("réponse envoyé");
+    } catch (IOException e) {
+      System.err.println("Echec write");
+    }
+
     return true;
 
   }
 
-  public static void annonce(Message msg, Serveur s)
+  public Message annonce(Message msg, Serveur s)
   {
     Annonce a = new Annonce(msg);
-    a.setId(s.get_nbAnn());
+    int id = s.get_nbAnn();
+    a.setId(id);
     s.add_Annonce(a);
-    System.out.println("annonce ok");
+    System.out.println(a.Annonce_from_Serveur());
+    Message reponse = Message.postAncOk(id);
+    return reponse;
+
   }
 
-  public static void req_annonce(Message m, Serveur s)
+  public Message req_annonce(Message m, Serveur s)
   {
-    System.out.println("req annonce ?");
-    System.out.println(s.get_Ann().size());
+    //String str;
+    Annonce[] req = new Annonce[s.get_Ann().size()];
     for (int i = 0; i< s.get_Ann().size();i++ )
     {
+      //System.out.println("dans le for");
+
       Annonce ann = s.get_Ann().get(i);
-      if (ann.is_domaine(m.getArgs()[0]))
-      {
-        String str = ann.Annonce_to_Client();
-        System.out.println(str);
-      }
+      req[i] = ann;
+      // str = ann.Annonce_to_Client();
+      // System.out.println(str);
+
+
+      // if (ann.is_domaine(m.getArgs()[0]))
+      // {
+      //   String str = ann.Annonce_to_Client();
+      //   System.out.println(str);
+      // }
     }
+    Message reponse = Message.sendAncOk(req);
+    return reponse;
+
   }
 }

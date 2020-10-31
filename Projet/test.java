@@ -3,45 +3,14 @@
 public class test{
 
     public static void main(String[] args) {
-
-        // Annonce anc = new Annonce();
-        //
-        // String test = anc.getDomaine();
-        // String str = anc.Annonce_to_Client();
-        // System.out.println();
-        // System.out.println(str);
-        //
-        // switch(test){
-        //   case "meuble":
-        //     System.out.println("c'est un meuble");
-        //     break;
-        //   default :
-        //     System.out.println("fuck u");
-        //     break;
-        // }
-        //
-
-        String a = null;
-        if(a !=null)
-          System.out.println("ok");
-        else
-          System.out.println("null");
-
-
-        // int b = 13;
-        // b = test(b);
-        // System.out.println(b);
+      int taille = 3;
+      String [] str = new String[taille];
+      String [] a = {"a", "b", "c"};
+      str[0] = a[0];
+      str[1] = a[1];
+      str[2] = a[2];
+      System.out.println(str[0]);
 
     }
 
-    static public int test(int a)
-    {
-
-      return test2(a);
-    }
-
-    static public int test2(int a)
-    {
-      return (a+5);
-    }
 }
