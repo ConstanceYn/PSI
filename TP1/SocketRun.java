@@ -17,12 +17,18 @@ public class SocketRun implements Runnable {
       while(continuer){
         try {
           PrintWriter pw = new PrintWriter(connection.getOutputStream() );
+          BufferedReader read = new BufferedReader( new InputStreamReader(connection.getInputStream()));
           while(true)
           {
             String content = cmp.Cmp_to_String();
             System.out.print(content);
             pw.print(content);
             pw.flush();
+            int co = read.read();
+            if (co == -1){
+              cmp.decr();
+              connection.close();
+            }
             Thread.sleep(10000);
             //System.out.println("socket closed : " + connection.isBound());
           }

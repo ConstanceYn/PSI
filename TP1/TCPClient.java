@@ -1,4 +1,5 @@
 import java.io.BufferedInputStream;
+import java.io.PrintWriter;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -19,9 +20,12 @@ public class TCPClient{
 
       BufferedReader networkIn = new BufferedReader( new InputStreamReader(soc.getInputStream()));
       String content = "";
+      PrintWriter writer = new PrintWriter(soc.getOutputStream());
       while(true){
         content = networkIn.readLine();
         System.out.println(content);
+        writer.print("c");
+        writer.flush();
         content = "";
 
       }
