@@ -29,10 +29,15 @@ public class SocketRun implements Runnable {
             int co = read.read();
             // si pas d'acquitement, le client est considéré comme déconnecté
             if (co == -1){
+              System.out.println("co = -1");
+              continuer = false;
               cmp.decr();
               connection.close();
+              break;
             }
-            Thread.sleep(10000);
+            else {
+              Thread.sleep(10000);
+            }
           }
         } catch (IOException e) {
           // Client considérer déconnecté
