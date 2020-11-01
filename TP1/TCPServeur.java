@@ -16,12 +16,10 @@ public class TCPServeur{
       try {
         Socket connection = serveur.accept();
         System.out.println("connexion !");
-
+        // Création thread pour gérer chaque nouveau client
         SocketRun connectRun = new SocketRun(connection, cmp);
         Thread t = new Thread(connectRun);
         t.start();
-
-        //connection.close();
       } catch (IOException e) {
         System.err.println("Echec connection");
       }

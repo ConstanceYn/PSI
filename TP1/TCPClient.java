@@ -16,18 +16,17 @@ public class TCPClient{
     try {
       soc = new Socket("localhost", 1027);
       System.out.println("Port de communication côté serveur : " + soc.getPort());
-
-
       BufferedReader networkIn = new BufferedReader( new InputStreamReader(soc.getInputStream()));
       String content = "";
       PrintWriter writer = new PrintWriter(soc.getOutputStream());
       while(true){
+        // Client lit message du serveur
         content = networkIn.readLine();
         System.out.println(content);
+        // Client envoie acquittement suite à réception du message
         writer.print("c");
         writer.flush();
         content = "";
-
       }
     }
     catch (IOException e){

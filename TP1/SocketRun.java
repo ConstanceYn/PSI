@@ -22,29 +22,23 @@ public class SocketRun implements Runnable {
           {
             String content = cmp.Cmp_to_String();
             System.out.print(content);
+            // envoie du nombre de connections
             pw.print(content);
             pw.flush();
+            // lit le message d'acquitement du client
             int co = read.read();
+            // si pas d'acquitement, le client est considéré comme déconnecté
             if (co == -1){
               cmp.decr();
               connection.close();
             }
             Thread.sleep(10000);
-            //System.out.println("socket closed : " + connection.isBound());
           }
-          // BON En gros on arrive bien à incrémenter le compteur
-          // mais quand le client quitte le serveur ne le sait pas
-          // du coup on arrive pas à décrementer le compteur :(
-
-
-          // System.out.println("deco");
-          //pw.close();
-
         } catch (IOException e) {
+          // Client considérer déconnecté
           System.err.println("Echec connection write");
           continuer = false;
           cmp.decr();
-
         }
       }
     }catch(InterruptedException e){

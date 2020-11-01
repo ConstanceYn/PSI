@@ -1,0 +1,14 @@
+Protocole de communication
+
+Ce protocole de communication suit un schéma client-serveur en TCP.
+
+Le serveur reçoit les connexions des clients sur le port 1027.
+Il crée une thread par client afin de pouvoir gérer plusieurs connexions.
+A chaque nouvelle connexion, le serveur incrémente un compteur de un.
+Toutes les 10 secondes, le serveur envoie au client un message lui indiquant le
+nombre de client connecté au serveur (nombre actuel indiqué par le compteur).
+Le client répond automatiquement à ce message par un message "c" pour indiqué
+qu'il a bien reçu l'information.
+Si le serveur ne reçoit pas de message "c" ou n'arrive pas à écrire au client,
+il considère que celui-ci est déconnecté et ferme la connexion ainsi que
+décrémente le compteur.
