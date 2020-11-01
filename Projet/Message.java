@@ -164,8 +164,7 @@ public class Message{
     return new Message("SEND_ANC_OK", annonces);
   }
 
-  public static Message sendAncOk(Annonce[] annonces){
-    int size_Ann = annonces.length;
+  public static Message sendAncOk(Annonce[] annonces, int size_Ann){
     int taille = 5*size_Ann;
     String[] arg = new String [taille];
     for (int i=0;i< size_Ann; i++) {

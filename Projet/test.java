@@ -1,15 +1,28 @@
-
+import java.util.Random;
 
 public class test{
 
     public static void main(String[] args) {
-      int taille = 3;
-      String [] str = new String[taille];
-      String [] a = {"a", "b", "c"};
-      str[0] = a[0];
-      str[1] = a[1];
-      str[2] = a[2];
-      System.out.println(str[0]);
+      // TEST RANDOM
+
+      // Random r = new Random();
+      // int test = r.nextInt();
+      // if(test < 0)
+      // {
+      //   System.out.println("negatif");
+      //   test = -test;
+      // }
+      // System.out.println(test);
+
+
+      // TEST IF STRING IS A INT
+      String str = "ceci n'est pas un entier ";
+      try {
+        int i = Integer.parseInt(str);
+        System.out.println("C'est un entier");
+      } catch (Exception e) {
+        System.out.println("Je ne suis pas un entier, et alors ca te derange ?");
+      }
 
     }
 

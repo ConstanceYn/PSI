@@ -2,6 +2,7 @@ import java.lang.String;
 import java.net.*;
 import java.util.Scanner;
 import java.net.InetAddress;
+import java.util.Random;
 
 public class User
 {
@@ -11,11 +12,14 @@ public class User
   private boolean connected; // je le mets pour l'instant, on verra plus tard si on le retire
 
   // constructeur
-  public User(String utilisateur, int token, InetAddress ip){
-    this.utilisateur = utilisateur;
-    this.token = token;
+  public User(String u, InetAddress ip){
+    utilisateur = u;
+    Random r = new Random();
+    token = r.nextInt();
+    if (token < 0)
+      token = -token;
     this.ip = ip;
-    this.connected = true;
+    connected = true;
   }
 
   // getters
@@ -52,6 +56,9 @@ public class User
     this.connected = false;
   }
 
-
+  public void setIp(InetAddress i)
+  {
+    ip = i;
+  }
 
 }

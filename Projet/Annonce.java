@@ -133,6 +133,10 @@ public class Annonce {
     {
         return (this.domaine.compareTo(d) == 0);
     }
+    public boolean is_user(User u)
+    {
+      return u.isSameUser(user);
+    }
 
 
     // quand un client envoie une nouvelle annonce au serveur
