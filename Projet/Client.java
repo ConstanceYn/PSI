@@ -54,6 +54,7 @@ public class Client{
         //System.out.println(action);
         switch(action) {
           case 1: // Connection
+            // FAIRE LA FONCTION 
             break;
 
           case 2: // poster une annonce

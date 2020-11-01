@@ -40,4 +40,31 @@ public class Serveur {
     return this.annonces;
   }
 
+
+  // rechercher un user par son token
+  public User getUser(int token){
+    for (int i=0; i< utilisateurs.size();i++ ) {
+      if(utilisateurs.get(i).getToken() == token)
+        return utilisateurs.get(i);
+    }
+    return null;
+  }
+
+  // rechercher un user par son nom
+  public User getUser(String nom){
+    for (int i=0; i<utilisateurs.size();i++ ) {
+      if(utilisateurs.get(i).getUtilisateur().equals(nom))
+        return utilisateurs.get(i);
+    }
+    return null;
+  }
+
+
+  public Annonce getAnnonce(int id){
+    // A FAIRE
+      return null;
+  }
+
+
+
 }

@@ -66,7 +66,7 @@ public class SocketRun implements Runnable {
             //System.out.println(content);
           }
           System.out.println(msg);
-          continuer = parse(msg, serveur, connection);
+          continuer = parse(msg, serveur);
 
           // 1 minute off
           Thread.sleep(60000);
@@ -81,13 +81,14 @@ public class SocketRun implements Runnable {
     }
   }
 
-  public boolean parse(String cmd, Serveur s, Socket c) {
+  public boolean parse(String cmd, Serveur s) {
     Message message = Message.strToMessage(cmd);
     String commande = message.getType();
 
     Message reponse = null;
     switch(commande) {
       case "CONNECT":
+        reponse = this.connect(message, s);
         break;
       case "DISCONNECT":
         return false;
@@ -128,6 +129,42 @@ public class SocketRun implements Runnable {
 
   }
 
+  public Message connect(Message msg, Serveur s)
+  {
+    String arg0 = msg.getArgs()[0];
+    try {
+      // if args[0] == int
+      //alors déjà un user dans la BDD
+      int i = Integer.parseInt(arg0);
+      User u = s.getUser(i);
+      u.set_connect();
+      u.setIp(connection.getInetAddress());
+      return Message.connectOk();
+
+    } catch (Exception e) { // le client a envoyé un nom
+      // regarder si l'user éxiste deja :
+      User u = s.getUser(arg0);
+      if (u!=null){
+        u.set_connect();
+        u.setIp(connection.getInetAddress());
+        return Message.connectOk();
+      }
+      // sinon
+      System.out.println("nouvel utilisateur");
+      u  = new User(arg0, connection.getInetAddress());
+      int token = u.getToken();
+      s.add_User(u);
+      return Message.connectNewUserOk(Integer.toString(token));
+    }
+
+
+
+
+    // if args[0] == int
+    //alors déjà un user dans la BDD
+
+  }
+
   public Message annonce(Message msg, Serveur s)
   {
     Annonce a = new Annonce(msg);
@@ -143,6 +180,7 @@ public class SocketRun implements Runnable {
   public Message req_annonce(Message m, Serveur s)
   {
     //String str;
+    // A AMELIORER BEAUCOUP
     Annonce[] req = new Annonce[s.get_Ann().size()];
     for (int i = 0; i< s.get_Ann().size();i++ )
     {
@@ -160,7 +198,7 @@ public class SocketRun implements Runnable {
       //   System.out.println(str);
       // }
     }
-    Message reponse = Message.sendAncOk(req);
+    Message reponse = Message.sendAncOk(req, req.length);
     return reponse;
 
   }
