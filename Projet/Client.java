@@ -40,8 +40,6 @@ public class Client{
         content = networkIn.readLine();
         requetes += content + "\n";
       }
-      System.out.println("sorti du while de ces morts");
-      //System.out.println(requetes);
 
       writer = new PrintWriter(soc.getOutputStream());
 
@@ -51,17 +49,18 @@ public class Client{
       {
         System.out.println(requetes);
         int action = userIn.read()-'0';
-        //System.out.println(action);
+        String message = "";
+
         switch(action) {
           case 1: // Connection
-            // FAIRE LA FONCTION 
+            System.out.println("Entrez le nom d'utilisateur ou le token : ");
+            message = userIn.readLine();
+            message = Message.connect(userIn.readLine()).messageToStr();
             break;
 
           case 2: // poster une annonce
-            String message = Message.postAnc().messageToStr();
+            message = Message.postAnc().messageToStr();
             //System.out.println(message);
-            writer.println(message);
-            writer.flush();
 
             break;
           // case 3: //modifier une annonce
@@ -71,50 +70,40 @@ public class Client{
           // case 5: // Afficher les domaines
           //   break;
           case 6: // Afficher les annonces d'un domaine (version provisoire, toutes les annonces)
-            writer.println("REQUEST_ANC\n.\n");
-            writer.flush();
+            message = "REQUEST_ANC\n.\n";
 
             break;
           // case 7: // Afficher ses annones
           //   break;
+          case 8:
+            continuer = false;
+            message = Message.disconnect().messageToStr();
+            break;
 
           default :
             System.out.println("Action inconnue");
             break ;
         }
+        writer.println(message);
+        writer.flush();
 
-        System.out.println("sorti du switch : on attend la réponse");
-        content = "";
-        String reponse = "";
-        while( !content.equals(".") ){
-          content = networkIn.readLine();
-          reponse += content + "\n";
+        if (action != 8)
+        {
+          System.out.println("sorti du switch : on attend la réponse");
+          content = "";
+          String reponse = "";
+          while( !content.equals(".") ){
+            content = networkIn.readLine();
+            reponse += content + "\n";
+          }
+          System.out.println("reponse du serveur : ");
+          System.out.println(reponse);
         }
-        System.out.println("reponse du serveur : ");
-        System.out.println(reponse);
 
-
-        continuer = false;
+        //continuer = false;
 
 
       }
-
-      // Demande de connection en bonne et due forme
-      // BufferedOutputStream bos = new BufferedOutputStream(soc.getOutputStream());
-      // String message;
-      // Scanner inFromUser = new Scanner(System.in);
-      // System.out.print("\nVeuillez indiquer votre nom d'utilisateur (première connection)\nOu votre #token (pensez au #) :\n");
-      // String sentence = inFromUser.nextLine();
-      // message = Message.connect(sentence).messageToStr();
-      // System.out.println(message);
-      // bos.write(message.getBytes());
-      // bos.flush();
-
-
-
-      //System.out.println("message du serveur = " + content);
-      //writer.close();
-      soc.close();
     }
     catch (UnknownHostException e){
       // pour la soc 3 car toto n'existe pas
@@ -123,18 +112,18 @@ public class Client{
     catch (IOException e){
       e.printStackTrace();
     }
-    finally
-    {
-      if(soc != null){
-        try {
-          soc.close();
-        }
-        catch (IOException e) {
-          e.printStackTrace();
-          soc = null;
-        }
-      }
-    }
+    // finally
+    // {
+    //   if(soc != null){
+    //     try {
+    //       soc.close();
+    //     }
+    //     catch (IOException e) {
+    //       e.printStackTrace();
+    //       soc = null;
+    //     }
+    //   }
+    // }
 
   }
 

@@ -51,7 +51,7 @@ public class User
     this.connected = true;
   }
   // deconnection
-  public void set_deconnect()
+  public void set_disconnect()
   {
     this.connected = false;
   }

@@ -7,22 +7,25 @@ import java.util.Scanner;
 public class SocketRun implements Runnable {
   private Socket connection;
   private Serveur serveur;
+  private int token; // pour retenir le token du client qu'on traite sans le chercher à chaque fois
 
   public SocketRun(Socket connection, Serveur s){
     this.connection = connection;
     this.serveur = s;
+    this.token = 0;
   }
 
 
   public void run(){
-    try{
-      BufferedReader networkIn = null;
-      PrintWriter writer = null;
+    try {
+    BufferedReader networkIn = null;
+    PrintWriter writer = null;
 
-      boolean continuer = true;
-       try{
-        // le serveur envoie un message de bienvenue au client
+    boolean continuer = true;
+     try{
+      // le serveur envoie un message de bienvenue au client
         writer = new PrintWriter(connection.getOutputStream());
+        networkIn = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
         String str = "Bonjour !! Bienvenue sur Good Duck";
         writer.println(str);
@@ -37,7 +40,8 @@ public class SocketRun implements Runnable {
         String cing = "> 5 : Afficher les domaines \n";
         String six = "> 6 : Afficher les annonces d'un domaine \n";
         String sept = "> 7 : Afficher ses annonces \n";
-        String cmd = "\n" +intro + deux + six + ".\n";
+        String huit = "> 8 : deconnection \n";
+        String cmd = "\n" +intro +un+ deux + six + huit + ".\n";
 
         writer.write(cmd);
         writer.flush();
@@ -49,13 +53,12 @@ public class SocketRun implements Runnable {
         // writer.close();
 
       } catch (IOException e) {
-       System.err.println("Echec connection write 1");
+        System.err.println("Echec connection write 1");
       }
 
       while(continuer){
         try {
           // on écoute le message du client
-          networkIn = new BufferedReader(new InputStreamReader(connection.getInputStream()));
           System.out.println("test read please");
 
           String content = "";
@@ -63,19 +66,23 @@ public class SocketRun implements Runnable {
           while(!content.equals(".")){
             content = networkIn.readLine();
             msg += content + "\n";
-            //System.out.println(content);
+            System.out.println("content" + content);
           }
-          System.out.println(msg);
+          //content = networkIn.readLine();
+          System.out.println("msg \n" + msg);
           continuer = parse(msg, serveur);
+          System.out.println("sortie du parse");
+          System.out.println();
 
-          // 1 minute off
-          Thread.sleep(60000);
+          // 10 secondes off
+          Thread.sleep(1000);
 
         } catch (IOException e) {
-          //System.err.println("Echec connection read");
-          //continuer = false;
+          System.err.println("Echec connection read");
+          continuer = false;
         }
       }
+      System.out.println("fin du client " + token);
     }catch(InterruptedException e){
 
     }
@@ -91,6 +98,9 @@ public class SocketRun implements Runnable {
         reponse = this.connect(message, s);
         break;
       case "DISCONNECT":
+        User u = s.getUser(token);
+        u.set_disconnect();
+        System.out.println( u.getConnected());
         return false;
       case "POST_ANC":
         reponse = this.annonce(message, s);
@@ -137,6 +147,12 @@ public class SocketRun implements Runnable {
       //alors déjà un user dans la BDD
       int i = Integer.parseInt(arg0);
       User u = s.getUser(i);
+      if (u == null)
+        return Message.connectKo();
+
+      if (u.getConnected())
+        return Message.connectKo();
+
       u.set_connect();
       u.setIp(connection.getInetAddress());
       return Message.connectOk();
@@ -145,6 +161,8 @@ public class SocketRun implements Runnable {
       // regarder si l'user éxiste deja :
       User u = s.getUser(arg0);
       if (u!=null){
+        if (u.getConnected())
+          return Message.connectKo();
         u.set_connect();
         u.setIp(connection.getInetAddress());
         return Message.connectOk();
@@ -153,6 +171,7 @@ public class SocketRun implements Runnable {
       System.out.println("nouvel utilisateur");
       u  = new User(arg0, connection.getInetAddress());
       int token = u.getToken();
+      this.token = token;
       s.add_User(u);
       return Message.connectNewUserOk(Integer.toString(token));
     }
