@@ -155,8 +155,10 @@ public class Message{
     return new Message("SEND_DOMAIN_KO", new String[0]);
   }
 
-  public static Message requestAnc(){
-    return new Message("REQUEST_ANC", new String[0]);
+  // il faut demander un demainde
+  public static Message requestAnc(String str){
+    String [] args = {str};
+    return new Message("REQUEST_ANC", args);
   }
 
   // Peut-être faire une variante qui envoit une liste d'annonces qu'on met en forme pour le message ensuite

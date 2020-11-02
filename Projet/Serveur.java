@@ -61,8 +61,7 @@ public class Serveur {
 
 
   public Annonce getAnnonce(int id){
-    // A FAIRE
-      return null;
+      return annonces.get(id);
   }
 
 

@@ -88,6 +88,11 @@ public class SocketRun implements Runnable {
     }
   }
 
+
+
+
+
+
   public boolean parse(String cmd, Serveur s) {
     Message message = Message.strToMessage(cmd);
     String commande = message.getType();
@@ -139,6 +144,11 @@ public class SocketRun implements Runnable {
 
   }
 
+
+
+  //
+  // FONCTION POUR SE CONNECTER
+  //
   public Message connect(Message msg, Serveur s)
   {
     String arg0 = msg.getArgs()[0];
@@ -176,48 +186,63 @@ public class SocketRun implements Runnable {
       return Message.connectNewUserOk(Integer.toString(token));
     }
 
-
-
-
-    // if args[0] == int
-    //alors déjà un user dans la BDD
-
   }
 
+  //
+  //FONCTION POUR AJOUTER UNE ANNONCE AU SERVEUR
+  //
   public Message annonce(Message msg, Serveur s)
   {
+    Message reponse = null;
+    if (token == 0)
+    {
+      reponse = Message.notConnected();
+      return
+    }
     Annonce a = new Annonce(msg);
+    if (a== null)
+    {
+      reponse = Message.postAncKo();
+    }
     int id = s.get_nbAnn();
     a.setId(id);
+    User u = s.getUser(token);
+    a.setUser(u);
     s.add_Annonce(a);
     System.out.println(a.Annonce_from_Serveur());
-    Message reponse = Message.postAncOk(id);
+    reponse = Message.postAncOk(id);
     return reponse;
 
   }
 
+
+  //
+  //FONCTION POUR ENVOYER TOUTES LES ANNONCES D'UN DOMAINE
+  //
   public Message req_annonce(Message m, Serveur s)
   {
-    //String str;
-    // A AMELIORER BEAUCOUP
-    Annonce[] req = new Annonce[s.get_Ann().size()];
-    for (int i = 0; i< s.get_Ann().size();i++ )
+    Message reponse = null;
+    if (token == 0)
     {
-      //System.out.println("dans le for");
-
-      Annonce ann = s.get_Ann().get(i);
-      req[i] = ann;
-      // str = ann.Annonce_to_Client();
-      // System.out.println(str);
-
-
-      // if (ann.is_domaine(m.getArgs()[0]))
-      // {
-      //   String str = ann.Annonce_to_Client();
-      //   System.out.println(str);
-      // }
+      reponse = Message.notConnected();
+      return
     }
-    Message reponse = Message.sendAncOk(req, req.length);
+    String str = m.getArgs()[0];
+    int taille = s.get_Ann().size();
+    Annonce[] req = new Annonce[taille];
+    int cmp = 0;
+
+    for (int i = 0; i< taille;i++ )
+    {
+
+      Annonce ann = s.getAnnonce(i);
+      if(ann.getDomaine().equals(str))
+      {
+        cmp ++;
+        req[i] = ann;
+      }
+    }
+    reponse = Message.sendAncOk(req, cmp);
     return reponse;
 
   }

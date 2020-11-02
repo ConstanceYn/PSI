@@ -63,14 +63,29 @@ public class Client{
             //System.out.println(message);
 
             break;
-          // case 3: //modifier une annonce
-          //   break;
+          case 3: //modifier une annonce
+            System.out.println("Quelle annonce voulez vos modifier ? (entrer l'identifiant )");
+            message = "MAJ_ANC \n";
+            System.out.println("Si vous ne voulez pas modifier un critère appuyez juste sur entrer");
+            System.out.print("nouveau domaine : ");
+            message += userIn.readLine() + "\n";
+            System.out.print("nouveau titre : ");
+            message += userIn.readLine() + "\n";
+            System.out.print("nouvelle description : ");
+            message += userIn.readLine() + "\n";
+            System.out.print("nouveau prix : ");
+            message += userIn.readLine() + "\n";
+
+            break;
           // case 4: // Suppimer une annonce
           //   break;
           // case 5: // Afficher les domaines
           //   break;
           case 6: // Afficher les annonces d'un domaine (version provisoire, toutes les annonces)
-            message = "REQUEST_ANC\n.\n";
+            System.out.println("Quel domaine voulez vous ? : ");
+            message = userIn.readLine();
+            message = Message.requestAnc(userIn.readLine()).messageToStr();
+            //message = "REQUEST_ANC\n.\n";
 
             break;
           // case 7: // Afficher ses annones
@@ -100,7 +115,7 @@ public class Client{
           System.out.println(reponse);
         }
 
-        //continuer = false;
+        continuer = false;
 
 
       }

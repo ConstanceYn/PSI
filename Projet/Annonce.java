@@ -74,7 +74,9 @@ public class Annonce {
         id = i;
     }
 
-    // ip + utilisateur
+    public void setUser(User u){
+      user = u;
+    }
 
 
     // getters
