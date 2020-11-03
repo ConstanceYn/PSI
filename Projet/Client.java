@@ -45,11 +45,12 @@ public class Client{
 
       // on envoie des requetes au serveur
       boolean continuer = true;
+      System.out.println(requetes);
       while(continuer)
       {
-        System.out.println(requetes);
+        //System.out.println(requetes);
         int action = userIn.read()-'0';
-        String message = "";
+        String message = null;
 
         switch(action) {
           case 1: // Connection
@@ -60,7 +61,7 @@ public class Client{
 
           case 2: // poster une annonce
             message = Message.postAnc().messageToStr();
-            //System.out.println(message);
+            System.out.println("message \n" + message + "fin message");
 
             break;
           case 3: //modifier une annonce
@@ -97,24 +98,32 @@ public class Client{
 
           default :
             action = -1;
-            System.out.println("Action inconnue");
+            //System.out.println("Action inconnue");
             break ;
         }
-        writer.println(message);
-        writer.flush();
-
-        if (action != 8 && action != -1)
+        if (action != -1)
         {
-          System.out.println("sorti du switch : on attend la réponse");
-          content = "";
-          String reponse = "";
-          while( !content.equals(".") ){
-            content = networkIn.readLine();
-            reponse += content + "\n";
+          writer.println(message);
+          writer.flush();
+
+          if (action != 8)
+          {
+            System.out.println("sorti du switch : on attend la réponse");
+            content = "";
+            String reponse = "";
+            while( !content.equals(".") ){
+              content = networkIn.readLine();
+              reponse += content + "\n";
+            }
+            System.out.println("reponse du serveur : ");
+            System.out.println(reponse);
+
+            System.out.println();
+
+            System.out.println(requetes);
           }
-          System.out.println("reponse du serveur : ");
-          System.out.println(reponse);
         }
+
 
         //continuer = false;
 

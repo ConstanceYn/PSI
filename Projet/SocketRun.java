@@ -72,13 +72,13 @@ public class SocketRun implements Runnable {
 
           String content = "";
           String msg = "";
-          while(content != null && !content.equals(".")){
+          while(!content.equals(".")){
             content = networkIn.readLine();
-            if (!content.equals("")){
-              msg += content + "\n";
-            }
+            msg += content + "\n";
             System.out.println("content" + content);
           }
+          content = networkIn.readLine();
+
           if (content != null){
             //content = networkIn.readLine();
             System.out.println("msg \n" + msg);
@@ -86,6 +86,8 @@ public class SocketRun implements Runnable {
             System.out.println("sortie du parse");
             System.out.println();
           }
+
+
 
           // 10 secondes off
           Thread.sleep(1000);
@@ -181,6 +183,7 @@ public class SocketRun implements Runnable {
 
       u.set_connect();
       u.setIp(connection.getInetAddress());
+      this.token = u.getToken();
       return Message.connectOk();
 
     } catch (Exception e) { // le client a envoyé un nom
@@ -191,6 +194,7 @@ public class SocketRun implements Runnable {
           return Message.connectKo();
         u.set_connect();
         u.setIp(connection.getInetAddress());
+        this.token = token;
         return Message.connectOk();
       }
       // sinon
