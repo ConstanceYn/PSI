@@ -26,44 +26,27 @@ public class SocketRun implements Runnable {
 
   public void run(){
     try {
-    //BufferedReader networkIn = null;
-    //PrintWriter writer = null;
+      boolean continuer = true;
 
-    boolean continuer = true;
-     //try{
-      // le serveur envoie un message de bienvenue au client
-        //writer = new PrintWriter(connection.getOutputStream());
-        //networkIn = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
-        String str = "Bonjour !! Bienvenue sur Good Duck";
-        writer.println(str);
-        writer.flush();
+      String str = "Bonjour !! Bienvenue sur Good Duck";
+      writer.println(str);
+      writer.flush();
 
 
-        String intro = "Entrez le nombre de la requete que vous voulez executer :\n";
-        String un = "> 1 : Connection\n";
-        String deux = "> 2 : Poster une annonce\n";
-        String trois = "> 3 : Modifier une annonce \n";
-        String quatre = "> 4 : Suppimer une annonce \n";
-        String cing = "> 5 : Afficher les domaines \n";
-        String six = "> 6 : Afficher les annonces d'un domaine \n";
-        String sept = "> 7 : Afficher ses annonces \n";
-        String huit = "> 8 : deconnection \n";
-        String cmd = "\n" +intro +un+ deux + six + huit + ".\n";
+      String intro = "Entrez le nombre de la requete que vous voulez executer :\n";
+      String un = "> 1 : Connection\n";
+      String deux = "> 2 : Poster une annonce\n";
+      String trois = "> 3 : Modifier une annonce \n";
+      String quatre = "> 4 : Suppimer une annonce \n";
+      String cing = "> 5 : Afficher les domaines \n";
+      String six = "> 6 : Afficher les annonces d'un domaine \n";
+      String sept = "> 7 : Afficher ses annonces \n";
+      String huit = "> 8 : deconnection \n";
+      String cmd = "\n" +intro +un+ deux + six + huit + ".\n";
 
-        writer.write(cmd);
-        writer.flush();
-        System.out.println("on a envoye les commandes");
-        // writer.println("");
-        // writer.flush();
-
-        // provisoir, une sorte de pansement quoi parce que sinon il veut pas flush
-        // writer.close();
-        /*
-      } catch (IOException e) {
-        System.err.println("Echec connection write 1");
-      }
-      */
+      writer.write(cmd);
+      writer.flush();
+      System.out.println("on a envoye les commandes");
 
       while(continuer){
         try {
@@ -72,22 +55,19 @@ public class SocketRun implements Runnable {
 
           String content = "";
           String msg = "";
-          while(!content.equals(".")){
+          while(content != null && !content.equals(".")){
             content = networkIn.readLine();
-            msg += content + "\n";
-            System.out.println("content" + content);
+            if (content != null && !content.equals("")){ // On ne prend pas en compte les lignes vides ou null :p
+              msg += content + "\n";
+            }
+            //System.out.println("content" + content);
           }
-          content = networkIn.readLine();
-
-          if (content != null){
-            //content = networkIn.readLine();
+          if (content != null){ // permet d'éviter de manipuler un msg null
             System.out.println("msg \n" + msg);
             continuer = parse(msg, serveur);
             System.out.println("sortie du parse");
             System.out.println();
           }
-
-
 
           // 10 secondes off
           Thread.sleep(1000);
@@ -116,48 +96,39 @@ public class SocketRun implements Runnable {
     Message reponse = null;
     switch(commande) {
       case "CONNECT":
-        reponse = this.connect(message, s);
-        break;
+      reponse = this.connect(message, s);
+      break;
       case "DISCONNECT":
-        User u = s.getUser(token);
-        u.set_disconnect();
-        System.out.println( u.getConnected());
-        return false;
+      User u = s.getUser(token);
+      u.set_disconnect();
+      System.out.println( u.getConnected());
+      return false;
       case "POST_ANC":
-        reponse = this.annonce(message, s);
-        break;
+      reponse = this.annonce(message, s);
+      break;
       case "MAJ_ANC":
-        break;
+      break;
       case "DELETE_ANC":
-        break;
+      break;
       case "REQUEST_DOMAIN":
-        break;
+      break;
       case "REQUEST_ANC":
-        reponse = this.req_annonce(message, s);
-        break;
+      reponse = this.req_annonce(message, s);
+      break;
       case "REQUEST_OWN_ANC":
-        break;
+      break;
       case "REQUEST_IP":
-        break;
+      break;
       default :
-        // UNKNOWN_REQUEST
-        break ;
+      // UNKNOWN_REQUEST
+      break ;
     }
     String rep = reponse.messageToStr();
     System.out.println(rep);
-    //try {
-      System.out.println("on envoie la réponse");
-      //PrintWriter writer = new PrintWriter(connection.getOutputStream());
-      this.writer.println(rep);
-      this.writer.flush();
-      //writer.close();
-      System.out.println("réponse envoyé");
-    /*
-    } catch (IOException e) {
-      System.err.println("Echec write");
-    }
-    */
-
+    System.out.println("on envoie la réponse");
+    this.writer.println(rep);
+    this.writer.flush();
+    System.out.println("réponse envoyé");
     return true;
 
   }
@@ -176,10 +147,10 @@ public class SocketRun implements Runnable {
       int i = Integer.parseInt(arg0);
       User u = s.getUser(i);
       if (u == null)
-        return Message.connectKo();
+      return Message.connectKo();
 
       if (u.getConnected())
-        return Message.connectKo();
+      return Message.connectKo();
 
       u.set_connect();
       u.setIp(connection.getInetAddress());
@@ -191,7 +162,7 @@ public class SocketRun implements Runnable {
       User u = s.getUser(arg0);
       if (u!=null){
         if (u.getConnected())
-          return Message.connectKo();
+        return Message.connectKo();
         u.set_connect();
         u.setIp(connection.getInetAddress());
         this.token = token;
