@@ -96,13 +96,14 @@ public class Client{
             break;
 
           default :
+            action = -1;
             System.out.println("Action inconnue");
             break ;
         }
         writer.println(message);
         writer.flush();
 
-        if (action != 8)
+        if (action != 8 && action != -1)
         {
           System.out.println("sorti du switch : on attend la réponse");
           content = "";
@@ -115,7 +116,7 @@ public class Client{
           System.out.println(reponse);
         }
 
-        continuer = false;
+        //continuer = false;
 
 
       }

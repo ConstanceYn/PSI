@@ -8,24 +8,32 @@ public class SocketRun implements Runnable {
   private Socket connection;
   private Serveur serveur;
   private int token; // pour retenir le token du client qu'on traite sans le chercher à chaque fois
+  private BufferedReader networkIn;
+  private PrintWriter writer;
 
   public SocketRun(Socket connection, Serveur s){
     this.connection = connection;
     this.serveur = s;
     this.token = 0;
+    try{
+      this.writer = new PrintWriter(connection.getOutputStream());
+      this.networkIn = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+    }catch(IOException e){
+
+    }
   }
 
 
   public void run(){
     try {
-    BufferedReader networkIn = null;
-    PrintWriter writer = null;
+    //BufferedReader networkIn = null;
+    //PrintWriter writer = null;
 
     boolean continuer = true;
-     try{
+     //try{
       // le serveur envoie un message de bienvenue au client
-        writer = new PrintWriter(connection.getOutputStream());
-        networkIn = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        //writer = new PrintWriter(connection.getOutputStream());
+        //networkIn = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
         String str = "Bonjour !! Bienvenue sur Good Duck";
         writer.println(str);
@@ -51,10 +59,11 @@ public class SocketRun implements Runnable {
 
         // provisoir, une sorte de pansement quoi parce que sinon il veut pas flush
         // writer.close();
-
+        /*
       } catch (IOException e) {
         System.err.println("Echec connection write 1");
       }
+      */
 
       while(continuer){
         try {
@@ -63,22 +72,27 @@ public class SocketRun implements Runnable {
 
           String content = "";
           String msg = "";
-          while(!content.equals(".")){
+          while(content != null && !content.equals(".")){
             content = networkIn.readLine();
-            msg += content + "\n";
+            if (!content.equals("")){
+              msg += content + "\n";
+            }
             System.out.println("content" + content);
           }
-          //content = networkIn.readLine();
-          System.out.println("msg \n" + msg);
-          continuer = parse(msg, serveur);
-          System.out.println("sortie du parse");
-          System.out.println();
+          if (content != null){
+            //content = networkIn.readLine();
+            System.out.println("msg \n" + msg);
+            continuer = parse(msg, serveur);
+            System.out.println("sortie du parse");
+            System.out.println();
+          }
 
           // 10 secondes off
           Thread.sleep(1000);
 
         } catch (IOException e) {
           System.err.println("Echec connection read");
+          e.printStackTrace();
           continuer = false;
         }
       }
@@ -129,16 +143,18 @@ public class SocketRun implements Runnable {
     }
     String rep = reponse.messageToStr();
     System.out.println(rep);
-    try {
+    //try {
       System.out.println("on envoie la réponse");
-      PrintWriter writer = new PrintWriter(connection.getOutputStream());
-      writer.println(rep);
-      writer.flush();
-      writer.close();
+      //PrintWriter writer = new PrintWriter(connection.getOutputStream());
+      this.writer.println(rep);
+      this.writer.flush();
+      //writer.close();
       System.out.println("réponse envoyé");
+    /*
     } catch (IOException e) {
       System.err.println("Echec write");
     }
+    */
 
     return true;
 
@@ -197,7 +213,7 @@ public class SocketRun implements Runnable {
     if (token == 0)
     {
       reponse = Message.notConnected();
-      return
+      return reponse;
     }
     Annonce a = new Annonce(msg);
     if (a== null)
@@ -225,7 +241,7 @@ public class SocketRun implements Runnable {
     if (token == 0)
     {
       reponse = Message.notConnected();
-      return
+      return reponse;
     }
     String str = m.getArgs()[0];
     int taille = s.get_Ann().size();
