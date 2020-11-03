@@ -65,17 +65,36 @@ public class Client{
 
             break;
           case 3: //modifier une annonce
+            String str = null;
             System.out.println("Quelle annonce voulez vos modifier ? (entrer l'identifiant )");
-            message = "MAJ_ANC \n";
+            userIn.readLine();
+            message = "MAJ_ANC\n";
+            message += userIn.readLine() + "\n";
+
             System.out.println("Si vous ne voulez pas modifier un critère appuyez juste sur entrer");
             System.out.print("nouveau domaine : ");
-            message += userIn.readLine() + "\n";
+            str = userIn.readLine();
+            if(str.equals(""))
+              str = "null";
+            message += str + "\n";
+
             System.out.print("nouveau titre : ");
-            message += userIn.readLine() + "\n";
+            str = userIn.readLine();
+            if(str.equals(""))
+              str = "null";
+            message += str + "\n";
+
             System.out.print("nouvelle description : ");
-            message += userIn.readLine() + "\n";
+            str = userIn.readLine();
+            if(str.equals(""))
+              str = "null";
+            message += str + "\n";
+
             System.out.print("nouveau prix : ");
-            message += userIn.readLine() + "\n";
+            str = userIn.readLine();
+            if(str.equals(""))
+              str = "null";
+            message += str + "\n.\n";
 
             break;
           // case 4: // Suppimer une annonce

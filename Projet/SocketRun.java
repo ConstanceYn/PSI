@@ -42,7 +42,7 @@ public class SocketRun implements Runnable {
       String six = "> 6 : Afficher les annonces d'un domaine \n";
       String sept = "> 7 : Afficher ses annonces \n";
       String huit = "> 8 : deconnection \n";
-      String cmd = "\n" +intro +un+ deux + six + huit + ".\n";
+      String cmd = "\n" +intro +un+ deux + trois + six + huit + ".\n";
 
       writer.write(cmd);
       writer.flush();
@@ -107,6 +107,7 @@ public class SocketRun implements Runnable {
       reponse = this.annonce(message, s);
       break;
       case "MAJ_ANC":
+      reponse = this.maj_annonce(message, s);
       break;
       case "DELETE_ANC":
       break;
@@ -203,6 +204,60 @@ public class SocketRun implements Runnable {
     System.out.println(a.Annonce_from_Serveur());
     reponse = Message.postAncOk(id);
     return reponse;
+
+  }
+
+
+  //
+  //FONCTION POUR MODIFIER UNE ANNONCE
+  //
+  public Message maj_annonce(Message message, Serveur s){
+
+    System.out.println("maj annonce peut être ? ");
+    if (token == 0)
+    {
+      Message reponse = Message.notConnected();
+      return reponse;
+    }
+    try {
+      System.out.println("aaaaaaaaa");
+      int num_ann = Integer.parseInt(message.getArgs()[0]);
+      System.out.println("0");
+
+      Annonce a = s.get_Ann().get(num_ann-1);
+
+      if(!message.getArgs()[1].equals("null")){
+        a.setDomaine(message.getArgs()[1]);
+      }
+      System.out.println("1");
+      if(!message.getArgs()[2].equals("null")){
+        a.setTitre(message.getArgs()[2]);
+      }
+      System.out.println("2");
+      if(!message.getArgs()[3].equals("null")){
+        a.setDescriptif(message.getArgs()[3]);
+      }
+      System.out.println("3");
+      if(!message.getArgs()[4].equals("null")){
+        try {
+          float f = Float.parseFloat(message.getArgs()[4]);
+          a.setPrix(f);
+        }catch(Exception e){
+          Message reponse = Message.majAncKo();
+          return reponse;
+        }
+      }
+      System.out.println("4");
+      Message reponse = Message.majAncOk(num_ann);
+      return  reponse;
+
+    }catch(Exception e) {
+      Message reponse = Message.majAncKo();
+      return reponse;
+    }
+
+    // Message reponse = Message.majAncKo();
+    // return reponse;
 
   }
 
