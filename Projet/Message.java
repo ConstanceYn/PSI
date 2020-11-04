@@ -129,8 +129,8 @@ public class Message{
     return new Message("MAJ_ANC_KO", new String[0]);
   }
 
-  public static Message deleteAnc(int id){
-    String[] args = {Integer.toString(id)};
+  public static Message deleteAnc(String id){
+    String[] args = {id};
     return new Message("DELETE_ANC", args);
   }
 

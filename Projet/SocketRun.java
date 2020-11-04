@@ -37,12 +37,12 @@ public class SocketRun implements Runnable {
       String un = "> 1 : Connection\n";
       String deux = "> 2 : Poster une annonce\n";
       String trois = "> 3 : Modifier une annonce \n";
-      String quatre = "> 4 : Suppimer une annonce \n";
+      String quatre = "> 4 : Supprimer une annonce \n";
       String cinq = "> 5 : Afficher les domaines \n";
       String six = "> 6 : Afficher les annonces d'un domaine \n";
       String sept = "> 7 : Afficher ses annonces \n";
       String huit = "> 8 : deconnection \n";
-      String cmd = "\n" +intro +un+ deux + trois + cinq + six + sept + huit + ".\n";
+      String cmd = "\n" +intro +un+ deux + trois + quatre + cinq + six + sept + huit + ".\n";
 
       writer.write(cmd);
       writer.flush();
@@ -110,6 +110,7 @@ public class SocketRun implements Runnable {
       reponse = this.maj_annonce(message, s);
       break;
       case "DELETE_ANC":
+      reponse = this.delete(message, s);
       break;
       case "REQUEST_DOMAIN":
       reponse = this.req_dommain(message, s);
@@ -262,6 +263,26 @@ public class SocketRun implements Runnable {
     // Message reponse = Message.majAncKo();
     // return reponse;
 
+  }
+
+  // FONCTION POUR SUPPRIMER UNE ANNONCE
+  public Message delete(Message m, Serveur s){
+    Message reponse = null;
+    if (token == 0)
+    {
+      reponse = Message.notConnected();
+      return reponse;
+    }
+    int id = Integer.parseInt(m.getArgs()[0]); // Id de l'annonce à détruire
+    ArrayList<Annonce> annonces = s.get_Ann();
+    for (int i = 0; i < annonces.size(); i++){
+      Annonce a = annonces.get(i);
+      if (a.getId() == id && a.getUser().getToken() == token){
+        annonces.remove(i);
+        return Message.deleteAncOk(id);
+      }
+    }
+    return Message.deleteAncKo();
   }
 
   // FONCTION POUR ENVOYER LES DOMAINES

@@ -97,8 +97,11 @@ public class Client{
             message += str + "\n.\n";
 
             break;
-          // case 4: // Suppimer une annonce
-          //   break;
+          case 4: // Supprimer une annonce
+            System.out.println("Id de l'annonce que vous souaitez retirer ? : ");
+            message = userIn.readLine();
+            message = Message.deleteAnc(userIn.readLine()).messageToStr();
+            break;
           case 5: // Afficher les domaines
             message = Message.requestDomain().messageToStr();
             break;
