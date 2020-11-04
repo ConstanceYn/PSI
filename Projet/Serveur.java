@@ -34,12 +34,6 @@ public class Serveur {
       domaines.add(dom);
   }
 
-  // juste pour le test
-  // public void add()
-  // {
-  //   nbAnn ++;
-  // }
-
   public int get_nbAnn()
   {
     return this.nbAnn;

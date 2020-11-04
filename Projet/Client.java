@@ -148,10 +148,6 @@ public class Client{
           }
         }
 
-
-        //continuer = false;
-
-
       }
     }
     catch (UnknownHostException e){
@@ -161,18 +157,18 @@ public class Client{
     catch (IOException e){
       e.printStackTrace();
     }
-    // finally
-    // {
-    //   if(soc != null){
-    //     try {
-    //       soc.close();
-    //     }
-    //     catch (IOException e) {
-    //       e.printStackTrace();
-    //       soc = null;
-    //     }
-    //   }
-    // }
+    finally
+    {
+      if(soc != null){
+        try {
+          soc.close();
+        }
+        catch (IOException e) {
+          e.printStackTrace();
+          soc = null;
+        }
+      }
+    }
 
   }
 

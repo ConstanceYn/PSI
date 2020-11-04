@@ -60,12 +60,10 @@ public class SocketRun implements Runnable {
             if (content != null && !content.equals("")){ // On ne prend pas en compte les lignes vides ou null :p
               msg += content + "\n";
             }
-            //System.out.println("content" + content);
           }
           if (content != null){ // permet d'éviter de manipuler un msg null
             System.out.println("msg \n" + msg);
             continuer = parse(msg, serveur);
-            System.out.println("sortie du parse");
             System.out.println();
           }
 
@@ -86,9 +84,6 @@ public class SocketRun implements Runnable {
 
 
 
-
-
-
   public boolean parse(String cmd, Serveur s) {
     Message message = Message.strToMessage(cmd);
     String commande = message.getType();
@@ -96,35 +91,35 @@ public class SocketRun implements Runnable {
     Message reponse = null;
     switch(commande) {
       case "CONNECT":
-      reponse = this.connect(message, s);
-      break;
+        reponse = this.connect(message, s);
+        break;
       case "DISCONNECT":
-      User u = s.getUser(token);
-      u.set_disconnect();
-      System.out.println( u.getConnected());
-      return false;
+        User u = s.getUser(token);
+        u.set_disconnect();
+        System.out.println( u.getConnected());
+        return false;
       case "POST_ANC":
-      reponse = this.annonce(message, s);
-      break;
+        reponse = this.annonce(message, s);
+        break;
       case "MAJ_ANC":
-      reponse = this.maj_annonce(message, s);
-      break;
+        reponse = this.maj_annonce(message, s);
+        break;
       case "DELETE_ANC":
-      reponse = this.delete(message, s);
-      break;
+        reponse = this.delete(message, s);
+        break;
       case "REQUEST_DOMAIN":
-      reponse = this.req_dommain(message, s);
-      break;
+        reponse = this.req_dommain(message, s);
+        break;
       case "REQUEST_ANC":
-      reponse = this.req_annonce(message, s);
-      break;
+        reponse = this.req_annonce(message, s);
+        break;
       case "REQUEST_OWN_ANC":
-      reponse = this.req_own_annonce(message, s);
-      break;
-      case "REQUEST_IP":
-      break;
+        reponse = this.req_own_annonce(message, s);
+        break;
+      // case "REQUEST_IP":
+      //   break;
       default :
-      // UNKNOWN_REQUEST
+        reponse = Message.unknownRequest();
       break ;
     }
     String rep = reponse.messageToStr();
@@ -132,7 +127,6 @@ public class SocketRun implements Runnable {
     System.out.println("on envoie la réponse");
     this.writer.println(rep);
     this.writer.flush();
-    System.out.println("réponse envoyé");
     return true;
 
   }
@@ -144,6 +138,9 @@ public class SocketRun implements Runnable {
   //
   public Message connect(Message msg, Serveur s)
   {
+    if(msg.getArgs().length != 1){
+      return Message.connectKo();
+    }
     String arg0 = msg.getArgs()[0];
     try {
       // if args[0] == int
@@ -194,20 +191,47 @@ public class SocketRun implements Runnable {
       reponse = Message.notConnected();
       return reponse;
     }
-    Annonce a = new Annonce(msg);
-    if (a== null)
-    {
+
+    try {
+      // on vérirfie le nombre d'argument
+      if (msg.getArgs().length != 4){
+        reponse = Message.postAncKo();
+        return reponse;
+      }
+      // on vérifie que le prix est bien un prix
+      Float prix = Float.parseFloat(msg.getArgs()[3]);
+      if (prix <0){
+        reponse = Message.postAncKo();
+        return reponse;
+      }
+
+      Annonce a = new Annonce(msg);
+      if (a== null){
+        reponse = Message.postAncKo();
+        return reponse;
+      }
+
+      int id = s.get_nbAnn();
+      a.setId(id);
+      User u = s.getUser(token);
+      // on vérifie qu'on a bien un utilisateur
+      if(u == null){
+        reponse = Message.postAncKo();
+        return reponse;
+      }
+      a.setUser(u);
+      s.add_Annonce(a);
+      s.add_Domaine(a);
+      System.out.println(a.Annonce_from_Serveur());
+      reponse = Message.postAncOk(id);
+      return reponse;
+
+
+    }catch(Exception e){
       reponse = Message.postAncKo();
+      return reponse;
     }
-    int id = s.get_nbAnn();
-    a.setId(id);
-    User u = s.getUser(token);
-    a.setUser(u);
-    s.add_Annonce(a);
-    s.add_Domaine(a);
-    System.out.println(a.Annonce_from_Serveur());
-    reponse = Message.postAncOk(id);
-    return reponse;
+
 
   }
 
@@ -216,82 +240,104 @@ public class SocketRun implements Runnable {
   //FONCTION POUR MODIFIER UNE ANNONCE
   //
   public Message maj_annonce(Message message, Serveur s){
-
-    System.out.println("maj annonce peut être ? ");
+    Message reponse = null;
     if (token == 0)
     {
-      Message reponse = Message.notConnected();
+      reponse = Message.notConnected();
       return reponse;
     }
     try {
-      System.out.println("aaaaaaaaa");
+      // on vérirfie le nombre d'argument
+      if (msg.getArgs().length != 5){
+        reponse = Message.majAncKo();
+        return reponse;
+      }
       int num_ann = Integer.parseInt(message.getArgs()[0]);
-      System.out.println("0");
 
       Annonce a = s.get_Ann().get(num_ann-1);
 
       if(!message.getArgs()[1].equals("null")){
         a.setDomaine(message.getArgs()[1]);
       }
-      System.out.println("1");
+
       if(!message.getArgs()[2].equals("null")){
         a.setTitre(message.getArgs()[2]);
       }
-      System.out.println("2");
+
       if(!message.getArgs()[3].equals("null")){
         a.setDescriptif(message.getArgs()[3]);
       }
-      System.out.println("3");
+
       if(!message.getArgs()[4].equals("null")){
         try {
+          // on vérifie que le prix est un prix
           float f = Float.parseFloat(message.getArgs()[4]);
+          if (f<0){
+            reponse = Message.majAncKo();
+            return reponse;
+          }
           a.setPrix(f);
         }catch(Exception e){
-          Message reponse = Message.majAncKo();
+          reponse = Message.majAncKo();
           return reponse;
         }
       }
-      System.out.println("4");
-      Message reponse = Message.majAncOk(num_ann);
+
+      reponse = Message.majAncOk(num_ann);
       return  reponse;
 
     }catch(Exception e) {
-      Message reponse = Message.majAncKo();
+      reponse = Message.majAncKo();
       return reponse;
     }
-
-    // Message reponse = Message.majAncKo();
-    // return reponse;
-
   }
 
+
+  //
   // FONCTION POUR SUPPRIMER UNE ANNONCE
+  //
   public Message delete(Message m, Serveur s){
-    Message reponse = null;
     if (token == 0)
     {
-      reponse = Message.notConnected();
-      return reponse;
+      return Message.notConnected();
     }
-    int id = Integer.parseInt(m.getArgs()[0]); // Id de l'annonce à détruire
-    ArrayList<Annonce> annonces = s.get_Ann();
-    for (int i = 0; i < annonces.size(); i++){
-      Annonce a = annonces.get(i);
-      if (a.getId() == id && a.getUser().getToken() == token){
-        annonces.remove(i);
-        return Message.deleteAncOk(id);
+    // on vérifie le nombre d'arguments
+    if (m.getArgs().length !=1){
+      return Message.deleteAncKo();
+    }
+
+    try {
+      int id = Integer.parseInt(m.getArgs()[0]); // Id de l'annonce à détruire
+
+      ArrayList<Annonce> annonces = s.get_Ann();
+      for (int i = 0; i < annonces.size(); i++){
+        Annonce a = annonces.get(i);
+        if (a.getId() == id && a.getUser().getToken() == token){
+          annonces.remove(i);
+          return Message.deleteAncOk(id);
+        }
       }
+      return Message.deleteAncKo();
+
+    }catch(Exception e){
+      // si args[0] n'est pas un entier
+      return Message.deleteAncKo();
     }
-    return Message.deleteAncKo();
   }
 
+
+  //
   // FONCTION POUR ENVOYER LES DOMAINES
+  //
   public Message req_dommain(Message m, Serveur s){
     Message reponse = null;
     if (token == 0)
     {
       reponse = Message.notConnected();
       return reponse;
+    }
+    if(m.getArgs().length !=0){
+      return Message.sendDomainKo();
     }
     ArrayList<String> dom = s.get_Dom();
     String[] domaines = new String[dom.size()];
@@ -312,6 +358,10 @@ public class SocketRun implements Runnable {
       reponse = Message.notConnected();
       return reponse;
     }
+    if(m.getArgs().length != 1){
+      return Message.sendAncKo();
+    }
+
     String domaine = m.getArgs()[0]; // domaine demandé
     ArrayList<Annonce> annonces = s.get_Ann();
     ArrayList<Annonce> rep = new ArrayList<Annonce>();
@@ -327,12 +377,20 @@ public class SocketRun implements Runnable {
     return reponse;
   }
 
+
+
+  //
+  //FONCTION POUR ENVOYER TOUTES LES ANNONCES DU CLIENT
+  //
   public Message req_own_annonce(Message m, Serveur s){
     Message reponse = null;
     if (token == 0)
     {
       reponse = Message.notConnected();
       return reponse;
+    }
+    if(m.getArgs().length !=0){
+      return Message.sendAncKo();
     }
     ArrayList<Annonce> annonces = s.get_Ann();
     ArrayList<Annonce> rep = new ArrayList<Annonce>();
