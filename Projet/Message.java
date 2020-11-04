@@ -155,7 +155,7 @@ public class Message{
     return new Message("SEND_DOMAIN_KO", new String[0]);
   }
 
-  // il faut demander un demainde
+  // il faut demander un domaine
   public static Message requestAnc(String str){
     String [] args = {str};
     return new Message("REQUEST_ANC", args);
@@ -166,15 +166,11 @@ public class Message{
     return new Message("SEND_ANC_OK", annonces);
   }
 
-  public static Message sendAncOk(Annonce[] annonces, int size_Ann){
-    int taille = 5*size_Ann;
-    String[] arg = new String [taille];
-    for (int i=0;i< size_Ann; i++) {
-      for (int j=0; j<5; j++) {
-          arg[ (i*5) +j] = annonces[i].getArgs(j);
-      }
+  public static Message sendAncOk(Annonce[] annonces){
+    String[] arg = new String[annonces.length];
+    for (int i=0; i< annonces.length; i++) {
+      arg[i] = annonces[i].Annonce_from_Serveur();
     }
-    //Message(String type, String[] args);
     return new Message("SEND_ANC_OK", arg);
   }
 

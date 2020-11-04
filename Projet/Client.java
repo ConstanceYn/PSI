@@ -109,8 +109,9 @@ public class Client{
             //message = "REQUEST_ANC\n.\n";
 
             break;
-          // case 7: // Afficher ses annones
-          //   break;
+          case 7: // Afficher ses annones
+            message = Message.requestOwnAnc().messageToStr();
+            break;
           case 8:
             continuer = false;
             message = Message.disconnect().messageToStr();

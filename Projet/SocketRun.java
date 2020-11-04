@@ -2,7 +2,6 @@ import java.net.*;
 import java.io.*;
 import java.io.BufferedInputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Scanner;
 
 public class SocketRun implements Runnable {
@@ -43,7 +42,7 @@ public class SocketRun implements Runnable {
       String six = "> 6 : Afficher les annonces d'un domaine \n";
       String sept = "> 7 : Afficher ses annonces \n";
       String huit = "> 8 : deconnection \n";
-      String cmd = "\n" +intro +un+ deux + trois + cinq + six + huit + ".\n";
+      String cmd = "\n" +intro +un+ deux + trois + cinq + six + sept + huit + ".\n";
 
       writer.write(cmd);
       writer.flush();
@@ -119,6 +118,7 @@ public class SocketRun implements Runnable {
       reponse = this.req_annonce(message, s);
       break;
       case "REQUEST_OWN_ANC":
+      reponse = this.req_own_annonce(message, s);
       break;
       case "REQUEST_IP":
       break;
@@ -267,24 +267,11 @@ public class SocketRun implements Runnable {
   // FONCTION POUR ENVOYER LES DOMAINES
   public Message req_dommain(Message m, Serveur s){
     Message reponse = null;
-    /*
-    ArrayList<domaine> annonces = s.get_Ann();
-    // Je garde le code qui suit encore un peu parce que j'ai des doutes sur certains de mes choix
-    Iterator<Annonce> it = annonces.iterator();
-    ArrayList<String> domaines;
-    String dom;
-    while(it.hasNext()){
-      dom = it.getDomaine();
-      if (!domaines.contains(dom)){
-        domains.add(dom);
-      }
-      it.next;
+    if (token == 0)
+    {
+      reponse = Message.notConnected();
+      return reponse;
     }
-    dom = it.getDomaine();
-    if (!domaines.contains(dom)){
-      domains.add(dom);
-    }
-    */
     ArrayList<String> dom = s.get_Dom();
     String[] domaines = new String[dom.size()];
     domaines = dom.toArray(domaines);
@@ -304,23 +291,40 @@ public class SocketRun implements Runnable {
       reponse = Message.notConnected();
       return reponse;
     }
-    String str = m.getArgs()[0];
-    int taille = s.get_Ann().size();
-    Annonce[] req = new Annonce[taille];
-    int cmp = 0;
-
-    for (int i = 0; i< taille;i++ )
-    {
-
-      Annonce ann = s.getAnnonce(i);
-      if(ann.getDomaine().equals(str))
-      {
-        cmp ++;
-        req[i] = ann;
+    String domaine = m.getArgs()[0]; // domaine demandé
+    ArrayList<Annonce> annonces = s.get_Ann();
+    ArrayList<Annonce> rep = new ArrayList<Annonce>();
+    for (int i = 0; i < annonces.size(); i++){
+      Annonce a = annonces.get(i);
+      if (a.getDomaine().equals(domaine)){
+        rep.add(a);
       }
     }
-    reponse = Message.sendAncOk(req, cmp);
+    Annonce[] req = new Annonce[rep.size()];
+    req = rep.toArray(req);
+    reponse = Message.sendAncOk(req);
     return reponse;
-
   }
+
+  public Message req_own_annonce(Message m, Serveur s){
+    Message reponse = null;
+    if (token == 0)
+    {
+      reponse = Message.notConnected();
+      return reponse;
+    }
+    ArrayList<Annonce> annonces = s.get_Ann();
+    ArrayList<Annonce> rep = new ArrayList<Annonce>();
+    for (int i = 0; i < annonces.size(); i++){
+      Annonce a = annonces.get(i);
+      if (a.getUser().getToken() == token){
+        rep.add(a);
+      }
+    }
+    Annonce[] req = new Annonce[rep.size()];
+    req = rep.toArray(req);
+    reponse = Message.sendAncOk(req);
+    return reponse;
+  }
+
 }
