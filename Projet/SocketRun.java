@@ -2,6 +2,7 @@ import java.net.*;
 import java.io.*;
 import java.io.BufferedInputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Scanner;
 
 public class SocketRun implements Runnable {
@@ -38,11 +39,11 @@ public class SocketRun implements Runnable {
       String deux = "> 2 : Poster une annonce\n";
       String trois = "> 3 : Modifier une annonce \n";
       String quatre = "> 4 : Suppimer une annonce \n";
-      String cing = "> 5 : Afficher les domaines \n";
+      String cinq = "> 5 : Afficher les domaines \n";
       String six = "> 6 : Afficher les annonces d'un domaine \n";
       String sept = "> 7 : Afficher ses annonces \n";
       String huit = "> 8 : deconnection \n";
-      String cmd = "\n" +intro +un+ deux + trois + six + huit + ".\n";
+      String cmd = "\n" +intro +un+ deux + trois + cinq + six + huit + ".\n";
 
       writer.write(cmd);
       writer.flush();
@@ -112,6 +113,7 @@ public class SocketRun implements Runnable {
       case "DELETE_ANC":
       break;
       case "REQUEST_DOMAIN":
+      reponse = this.req_dommain(message, s);
       break;
       case "REQUEST_ANC":
       reponse = this.req_annonce(message, s);
@@ -201,6 +203,7 @@ public class SocketRun implements Runnable {
     User u = s.getUser(token);
     a.setUser(u);
     s.add_Annonce(a);
+    s.add_Domaine(a);
     System.out.println(a.Annonce_from_Serveur());
     reponse = Message.postAncOk(id);
     return reponse;
@@ -259,6 +262,34 @@ public class SocketRun implements Runnable {
     // Message reponse = Message.majAncKo();
     // return reponse;
 
+  }
+
+  // FONCTION POUR ENVOYER LES DOMAINES
+  public Message req_dommain(Message m, Serveur s){
+    Message reponse = null;
+    /*
+    ArrayList<domaine> annonces = s.get_Ann();
+    // Je garde le code qui suit encore un peu parce que j'ai des doutes sur certains de mes choix
+    Iterator<Annonce> it = annonces.iterator();
+    ArrayList<String> domaines;
+    String dom;
+    while(it.hasNext()){
+      dom = it.getDomaine();
+      if (!domaines.contains(dom)){
+        domains.add(dom);
+      }
+      it.next;
+    }
+    dom = it.getDomaine();
+    if (!domaines.contains(dom)){
+      domains.add(dom);
+    }
+    */
+    ArrayList<String> dom = s.get_Dom();
+    String[] domaines = new String[dom.size()];
+    domaines = dom.toArray(domaines);
+    reponse = Message.sendDomainOk(domaines);
+    return reponse;
   }
 
 

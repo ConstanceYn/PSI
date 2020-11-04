@@ -4,14 +4,16 @@ import java.util.ArrayList;
 
 public class Serveur {
 
-  ArrayList<Annonce> annonces;
-  int nbAnn;
-  ArrayList<User> utilisateurs;
+  private ArrayList<Annonce> annonces;
+  private int nbAnn;
+  private ArrayList<User> utilisateurs;
+  private ArrayList<String> domaines;
 
   public Serveur(){
     annonces = new ArrayList<Annonce>();
     nbAnn = 1;
     utilisateurs = new ArrayList<User>();
+    domaines = new ArrayList<String>();
   }
 
   public void add_Annonce(Annonce a)
@@ -25,6 +27,13 @@ public class Serveur {
     utilisateurs.add(u);
   }
 
+  public void add_Domaine(Annonce a)
+  {
+    String dom = a.getDomaine();
+    if (!domaines.contains(dom))
+      domaines.add(dom);
+  }
+
   // juste pour le test
   // public void add()
   // {
@@ -35,9 +44,15 @@ public class Serveur {
   {
     return this.nbAnn;
   }
+
   public ArrayList<Annonce> get_Ann()
   {
     return this.annonces;
+  }
+
+  public ArrayList<String> get_Dom()
+  {
+    return this.domaines;
   }
 
 

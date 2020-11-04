@@ -99,8 +99,9 @@ public class Client{
             break;
           // case 4: // Suppimer une annonce
           //   break;
-          // case 5: // Afficher les domaines
-          //   break;
+          case 5: // Afficher les domaines
+            message = Message.requestDomain().messageToStr();
+            break;
           case 6: // Afficher les annonces d'un domaine (version provisoire, toutes les annonces)
             System.out.println("Quel domaine voulez vous ? : ");
             message = userIn.readLine();
