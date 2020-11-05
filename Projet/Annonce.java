@@ -50,7 +50,11 @@ public class Annonce {
         descriptif= sentence;
 
         System.out.print("prix : ");
-        prix = inFromUser.nextFloat();
+        try {
+          prix = inFromUser.nextFloat();
+        }catch(Exception e){
+          prix = -1;
+        }
 
         // l'id et l'user ne sont pas encore set
         id = -1;
