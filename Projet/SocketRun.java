@@ -248,7 +248,7 @@ public class SocketRun implements Runnable {
     }
     try {
       // on vérirfie le nombre d'argument
-      if (msg.getArgs().length != 5){
+      if (message.getArgs().length != 5){
         reponse = Message.majAncKo();
         return reponse;
       }

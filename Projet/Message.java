@@ -19,10 +19,9 @@ public class Message{
     return s;
   }
 
-  // Regarde si String a la forme d'un message (au moins un type même si inconnu et finit par .)
+  // Regarde si String a la forme d'un message (au moins un type même si inconnu)
   public static boolean isMessageShaped(String s){
     String[] split = s.split("\n");
-    //return (split.length > 1 && split[split.length - 1] == "."); bug :(
     return (split.length > 1);
   }
 
@@ -50,9 +49,8 @@ public class Message{
   }
 
   // Fonctions static créant différent type de message
-  // Je sais pas si je les laisse là ou fait une class à part que de fonctions static
 
-  public static Message connect(String utilisateur){ // version possible demandant d'entrer l'info à l'utilisateur ?
+  public static Message connect(String utilisateur){
     String[] args = {utilisateur};
     return new Message("CONNECT", args);
   }
@@ -87,10 +85,6 @@ public class Message{
     return new Message("DISCONNECT", new String[0]);
   }
 
-
-  // Juste un commentaire pour qu'on se rappel de modifier cette fonction
-  //quand on aura mieux fait Annonce
-  // La fonction suivante est peut-être plus interessante alors ^^
   public static Message postAnc(Annonce a){
     String[] args = {a.getDomaine(), a.getTitre(), a.getDescriptif(), Float.toString(a.getPrix())};
     return new Message("POST_ANC", args);
@@ -112,9 +106,6 @@ public class Message{
     return new Message("POST_ANC_KO", new String[0]);
   }
 
-
-  // Pareil que plus haut !!!
-  //
   public static Message majAnc(Annonce a){ // on devra donner une version mise à jour de l'annonce en argument
     String[] args = {Integer.toString(a.getId()), a.getDomaine(), a.getTitre(), a.getDescriptif(), Float.toString(a.getPrix())};
     return new Message("MAJ_ANC", args);
@@ -161,7 +152,6 @@ public class Message{
     return new Message("REQUEST_ANC", args);
   }
 
-  // Peut-être faire une variante qui envoit une liste d'annonces qu'on met en forme pour le message ensuite
   public static Message sendAncOk(String[] annonces){
     return new Message("SEND_ANC_OK", annonces);
   }
@@ -182,7 +172,6 @@ public class Message{
     return new Message("REQUEST_OWN_ANC", new String[0]);
   }
 
-  // Peut-être faire une variante qui envoit une liste d'annonces qu'on met en forme pour le message ensuite
   public static Message sendOwnAncOk(String[] annonces){
     return new Message("SEND_OWN_ANC_OK", annonces);
   }

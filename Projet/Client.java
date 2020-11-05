@@ -109,7 +109,6 @@ public class Client{
             System.out.println("Quel domaine voulez vous ? : ");
             message = userIn.readLine();
             message = Message.requestAnc(userIn.readLine()).messageToStr();
-            //message = "REQUEST_ANC\n.\n";
 
             break;
           case 7: // Afficher ses annones
