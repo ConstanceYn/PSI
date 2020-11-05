@@ -131,7 +131,7 @@ public class Client{
 
           if (action != 8)
           {
-            System.out.println("sorti du switch : on attend la réponse");
+            //System.out.println("sorti du switch : on attend la réponse");
             content = "";
             String reponse = "";
             while( !content.equals(".") ){

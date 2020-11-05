@@ -46,12 +46,12 @@ public class SocketRun implements Runnable {
 
       writer.write(cmd);
       writer.flush();
-      System.out.println("on a envoye les commandes");
+      //System.out.println("on a envoye les commandes");
 
       while(continuer){
         try {
           // on écoute le message du client
-          System.out.println("test read please");
+          //System.out.println("test read please");
 
           String content = "";
           String msg = "";
@@ -124,7 +124,7 @@ public class SocketRun implements Runnable {
     }
     String rep = reponse.messageToStr();
     System.out.println(rep);
-    System.out.println("on envoie la réponse");
+    System.out.println("Réponse envoyée :");
     this.writer.println(rep);
     this.writer.flush();
     return true;
