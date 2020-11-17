@@ -404,7 +404,12 @@ public class SocketRun implements Runnable {
       return reponse;
     }
     int id = Integer.parseInt(m.getArgs()[0]);
-    Annonce a = annonces.get(id);
+    Annonce a = null;
+    for (int i = 0; i < annonces.size(); i++){
+      if (annonces.get(i).getId() == id) {
+        a = annonces.get(i);
+      }
+    }
     if (a != null) {
       String ip = a.getUser().getIp().getHostAddress();
       String nom = a.getUser().getUtilisateur();

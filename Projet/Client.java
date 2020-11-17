@@ -141,7 +141,7 @@ public class Client{
           writer.println(message);
           writer.flush();
 
-          if (action != 8)
+          if (action != 9)
           {
             //System.out.println("sorti du switch : on attend la réponse");
             content = "";
