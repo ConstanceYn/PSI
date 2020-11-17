@@ -34,18 +34,25 @@ public class Client{
 
 
       // liste des requetes possibles :
-      String content = "";
-      String requetes = "";
-      while( !content.equals(".") ){
-        content = networkIn.readLine();
-        requetes += content + "\n";
-      }
 
+      String content = "";
       writer = new PrintWriter(soc.getOutputStream());
 
       // on envoie des requetes au serveur
-      boolean continuer = true;
+
+      String intro = "Entrez le nombre de la requete que vous voulez executer :\n";
+      String un = "> 1 : Connexion\n";
+      String deux = "> 2 : Poster une annonce\n";
+      String trois = "> 3 : Modifier une annonce \n";
+      String quatre = "> 4 : Supprimer une annonce \n";
+      String cinq = "> 5 : Afficher les domaines \n";
+      String six = "> 6 : Afficher les annonces d'un domaine \n";
+      String sept = "> 7 : Afficher ses annonces \n";
+      String huit = "> 8 : deconnexion \n";
+      String requetes = "\n" +intro +un+ deux + trois + quatre + cinq + six + sept + huit + ".\n";
+
       System.out.println(requetes);
+      boolean continuer = true;
       while(continuer)
       {
         //System.out.println(requetes);
