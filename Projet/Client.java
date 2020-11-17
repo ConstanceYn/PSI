@@ -48,8 +48,9 @@ public class Client{
       String cinq = "> 5 : Afficher les domaines \n";
       String six = "> 6 : Afficher les annonces d'un domaine \n";
       String sept = "> 7 : Afficher ses annonces \n";
-      String huit = "> 8 : deconnexion \n";
-      String requetes = "\n" +intro +un+ deux + trois + quatre + cinq + six + sept + huit + ".\n";
+      String huit = "> 8 : Contacter un annonceur \n";
+      String neuf = "> 9 : deconnexion \n";
+      String requetes = "\n" +intro +un+ deux + trois + quatre + cinq + six + sept + huit + neuf + ".\n";
 
       System.out.println(requetes);
       boolean continuer = true;
@@ -112,16 +113,20 @@ public class Client{
           case 5: // Afficher les domaines
             message = Message.requestDomain().messageToStr();
             break;
-          case 6: // Afficher les annonces d'un domaine (version provisoire, toutes les annonces)
+          case 6: // Afficher les annonces d'un domaine
             System.out.println("Quel domaine voulez vous ? : ");
             message = userIn.readLine();
             message = Message.requestAnc(userIn.readLine()).messageToStr();
-
             break;
           case 7: // Afficher ses annones
             message = Message.requestOwnAnc().messageToStr();
             break;
-          case 8:
+          case 8: // Demander IP et lancer discussion ?
+            System.out.println("Indiquer l'id de l'annonce qui vous interesse : ");
+            message = userIn.readLine();
+            message = Message.requestIp(userIn.readLine()).messageToStr();
+            break;
+          case 9: // Deconnexion
             continuer = false;
             message = Message.disconnect().messageToStr();
             break;

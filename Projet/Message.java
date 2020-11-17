@@ -180,8 +180,9 @@ public class Message{
     return new Message("SEND_OWN_ANC_KO", new String[0]);
   }
 
-  public static Message requestIp(){
-    return new Message("REQUEST_IP", new String[0]);
+  public static Message requestIp(String idAnc){
+    String[] args = {idAnc};
+    return new Message("REQUEST_IP", args);
   }
 
   public static Message sendIpOk(String ip, String user){

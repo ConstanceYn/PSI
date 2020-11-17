@@ -104,8 +104,9 @@ public class SocketRun implements Runnable {
       case "REQUEST_OWN_ANC":
         reponse = this.req_own_annonce(message, s);
         break;
-      // case "REQUEST_IP":
-      //   break;
+      case "REQUEST_IP":
+        reponse = this.req_ip(message, s);
+        break;
       default :
         reponse = Message.unknownRequest();
       break ;
@@ -391,6 +392,26 @@ public class SocketRun implements Runnable {
     Annonce[] req = new Annonce[rep.size()];
     req = rep.toArray(req);
     reponse = Message.sendAncOk(req);
+    return reponse;
+  }
+
+  public Message req_ip(Message m, Serveur s){
+    Message reponse = null;
+    ArrayList<Annonce> annonces = s.get_Ann();
+    if (token == 0)
+    {
+      reponse = Message.notConnected();
+      return reponse;
+    }
+    int id = Integer.parseInt(m.getArgs()[0]);
+    Annonce a = annonces.get(id);
+    if (a != null) {
+      String ip = a.getUser().getIp().getHostAddress();
+      String nom = a.getUser().getUtilisateur();
+      reponse = Message.sendIpOk(ip, nom);
+    } else {
+      reponse = Message.sendIpKo();
+    }
     return reponse;
   }
 
