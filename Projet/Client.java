@@ -21,6 +21,13 @@ public class Client{
       soc = new Socket("localhost", 1027);
       System.out.println("Port de communication côté serveur : " + soc.getPort());
 
+      //
+      //
+      //LANCER LE THREAD UDP
+      // le fichier ClientUDP.java
+      //(je sais pas faire donc pour l'instant je mets juste les étapes)
+      //
+
 
       PrintWriter writer = null; // pour écrire au serveur
       BufferedReader networkIn = new BufferedReader( new InputStreamReader(soc.getInputStream())); // pour lire le serveur
