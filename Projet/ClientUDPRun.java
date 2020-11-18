@@ -8,8 +8,8 @@ public class ClientUDPRun implements Runnable {
 
     Process proc = null;
     try {
-      //String[] cmdss= {"gnome-terminal","-e", "java ClientUDP"};
-      String[] cmdss= {"ttab", "java ClientUDP"};
+      String[] cmdss= {"gnome-terminal","-e", "java ClientUDP"};
+      //String[] cmdss= {"ttab", "java ClientUDP"};
       proc = Runtime.getRuntime().exec(cmdss);
     } catch (IOException e) {
       e.printStackTrace();
