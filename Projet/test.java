@@ -1,27 +1,31 @@
-import java.util.Random;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.PrintWriter;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.Scanner;
+import java.io.BufferedReader;
+import java.net.*;
+import java.io.*;
+import java.lang.Runtime;
+
 
 public class test{
 
     public static void main(String[] args) {
-      // TEST RANDOM
+      // test ouverture d'un terminal
 
-      // Random r = new Random();
-      // int test = r.nextInt();
-      // if(test < 0)
-      // {
-      //   System.out.println("negatif");
-      //   test = -test;
-      // }
-      // System.out.println(test);
-
-
-      // TEST IF STRING IS A INT
-      String str = "ceci n'est pas un entier ";
+      Process proc = null;
       try {
-        int i = Integer.parseInt(str);
-        System.out.println("C'est un entier");
-      } catch (Exception e) {
-        System.out.println("Je ne suis pas un entier, et alors ca te derange ?");
+        String[] cmdss= {"gnome-terminal","-e", "java Envoi"};
+
+
+        proc = Runtime.getRuntime().exec(cmdss);
+
+      } catch (IOException e) {
+        e.printStackTrace();
       }
 
     }
