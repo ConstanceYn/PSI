@@ -60,8 +60,9 @@ public class Message{
     return new Message("CONNECT", args);
   }
 
-  public static Message connectOk(){
-    return new Message("CONNECT_OK", new String[0]);
+  public static Message connectOk(String token, String utilisateur){
+    String[] args = {token, utilisateur}
+    return new Message("CONNECT_OK", args);
   }
 
   public static Message connectNewUserOk(String token){
@@ -198,38 +199,12 @@ public class Message{
     return new Message("UNKNOWN_REQUEST", new String[0]);
   }
 
-  public static Message connectPair(String user){
-    String[] args = {user};
-    return new Message("CONNECT_PAIR", args);
+  public static Message msg(){
+    return new Message("MSG", new String[0])
   }
 
-  public static Message connectPairOk(){
-    return new Message("CONNECT_PAIR_OK", new String[0]);
-  }
-
-  public static Message connectPairRejected(){
-    return new Message("CONNECT_PAIR_REJECTED", new String[0]);
-  }
-
-  public static Message connectPairKo(){
-    return new Message("CONNECT_PAIR_KO", new String[0]);
-  }
-
-  public static Message disconnect_pair(){
-    return new Message("DISCONNECT_PAIR", new String[0]);
-  }
-
-  public static Message sendMsg(String mes){
-    String[] args = {mes};
-    return new Message("SEND_MSG", args);
-  }
-
-  public static Message sendMsgOk(){
-    return new Message("SEND_MSG_OK", new String[0]);
-  }
-
-  public static Message sendMsgKo(){
-    return new Message("SEND_MSG_KO", new String[0]);
+  public static Message msgAck(){
+    return new Message("MSG_ACK", new String[0])
   }
 
 }

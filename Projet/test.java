@@ -20,10 +20,8 @@ public class test{
       Process proc = null;
       try {
         String[] cmdss= {"gnome-terminal","-e", "java Envoi"};
-
-
+        // String[] cmdss= {"ttab", "java Envoi"};
         proc = Runtime.getRuntime().exec(cmdss);
-
       } catch (IOException e) {
         e.printStackTrace();
       }
