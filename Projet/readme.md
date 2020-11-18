@@ -5,11 +5,11 @@ lancement du client
       |
       |__________________ClientUDP
       |                          |     
-      |                          |
-      |                          |
-      |                          |___  EnvoiUDP
-      |                          |          |création d'un objet Connexion partagé par envoi et recoi
-      |                          |          |_______ RecoiUDP
-      |                          |          |           |
-      |                          |          |           |
-      |                          |          |           |  
+      |                          |___ EnvoiUDP
+      |                          |          |
+      |                          |          |
+      |                          |          |
+      |                          |          |
+      |                          |          |           
+      |                          |          |         
+      |                          |          |         
