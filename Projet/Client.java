@@ -27,7 +27,9 @@ public class Client{
       // le fichier ClientUDP.java
       //(je sais pas faire donc pour l'instant je mets juste les étapes)
       //
-
+      ClientUDPRun convRun = new ClientUDPRun();
+      Thread t = new Thread(convRun);
+      t.start();
 
       PrintWriter writer = null; // pour écrire au serveur
       BufferedReader networkIn = new BufferedReader( new InputStreamReader(soc.getInputStream())); // pour lire le serveur

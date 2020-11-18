@@ -145,7 +145,7 @@ public class SocketRun implements Runnable {
       u.set_connect();
       u.setIp(connection.getInetAddress());
       this.token = u.getToken();
-      return Message.connectOk();
+      return Message.connectOk(this.token, u.getUtilisateur());
 
     } catch (Exception e) { // le client a envoyé un nom
       // regarder si l'user éxiste deja :
@@ -156,7 +156,7 @@ public class SocketRun implements Runnable {
         u.set_connect();
         u.setIp(connection.getInetAddress());
         this.token = token;
-        return Message.connectOk();
+        return Message.connectOk(this.token, u.getUtilisateur());
       }
       // sinon
       System.out.println("nouvel utilisateur");

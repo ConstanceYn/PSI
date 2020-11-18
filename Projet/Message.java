@@ -1,7 +1,7 @@
 public class Message{
   // actuellement public mais ça changera surement
-  String type;
-  String[] args;
+  private String type;
+  private String[] args;
 
   // Constructeur
   public Message(String type, String[] args){
@@ -60,8 +60,8 @@ public class Message{
     return new Message("CONNECT", args);
   }
 
-  public static Message connectOk(String token, String utilisateur){
-    String[] args = {token, utilisateur}
+  public static Message connectOk(int token, String utilisateur){
+    String[] args = {Integer.toString(token), utilisateur};
     return new Message("CONNECT_OK", args);
   }
 
@@ -200,11 +200,11 @@ public class Message{
   }
 
   public static Message msg(){
-    return new Message("MSG", new String[0])
+    return new Message("MSG", new String[0]);
   }
 
   public static Message msgAck(){
-    return new Message("MSG_ACK", new String[0])
+    return new Message("MSG_ACK", new String[0]);
   }
 
 }
