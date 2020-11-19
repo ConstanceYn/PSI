@@ -63,8 +63,6 @@ public class ClientUDP implements Runnable {
   }
 
   public void run() {
-    ClientUDP cupd = new ClientUDP();
-
     int port = 7201;
 
     try{
@@ -90,16 +88,16 @@ public class ClientUDP implements Runnable {
           // message[1] = timestamp
           // message[2] = msg
           String nom = message.getArgs()[0];
-          int position = cupd.isContact(nom);
+          int position = this.isContact(nom);
           if( position == -1)
           {
             System.out.println(nom);
             Connexion newCo = new Connexion(nom, addr, portCo);
-            position = cupd.addContact(newCo);
+            position = this.addContact(newCo);
           }
 
           try{
-            FileOutputStream fis = new FileOutputStream(cupd.fichiers.get(position));
+            FileOutputStream fis = new FileOutputStream(this.fichiers.get(position));
             String str = nom + " : " +message.getArgs()[2] + "\n";
             fis.write(str.getBytes());
 
@@ -114,18 +112,18 @@ public class ClientUDP implements Runnable {
           serveurSocket.send(sendPacket);
         }
         else if(message.getType().equals("MSG_ACK")){
-          Message m = cupd.RemoveMessage(message.getArgs()[1]);
+          Message m = this.RemoveMessage(message.getArgs()[1]);
           String nom = m.getArgs()[0];
-          int position = cupd.isContact(nom);
+          int position = this.isContact(nom);
           if( position == -1)
           {
             // on peut recevoir l'ack de qqn à qui on a envoyé un message sans l'ajouter aux contacts ?
             // je sais pas si c'est possible donc dans le doute je le mets
             Connexion newCo = new Connexion(nom, addr, portCo);
-            position = cupd.addContact(newCo);
+            position = this.addContact(newCo);
           }
           try{
-            FileOutputStream fis = new FileOutputStream(cupd.fichiers.get(position));
+            FileOutputStream fis = new FileOutputStream(this.fichiers.get(position));
             String str = "moi : " +message.getArgs()[2] + "\n";
             fis.write(str.getBytes());
 
