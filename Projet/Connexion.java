@@ -7,8 +7,13 @@ public class Connexion {
   private int port;
 
 
-  public Connexion(String n, InetAddress i){
+  public Connexion(String n, InetAddress i, int p){
     nom = n;
     ip = i;
+    port = p;
+  }
+
+  public String getNom(){
+    return nom;
   }
 }
