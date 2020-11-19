@@ -1,14 +1,15 @@
 import java.net.*;
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 // la partie du client qui attend les communications
 // comme MainServeur.java mais en udp
-public class ClientUDP {
+public class ClientUDP implements Runnable {
   private ArrayList<Connexion> contacts;
   private ArrayList<File> fichiers;
   private ArrayList<Message> messages;
 
-  public ClientUDP(){
+  public ClientUDP() {
     contacts = new ArrayList<Connexion>();
     fichiers = new ArrayList<File>();
     messages = new ArrayList<Message>(); // liste des messages dont on attend un ack
@@ -18,11 +19,18 @@ public class ClientUDP {
   // return la position dans l'array
   public int isContact(String nom){
     for (int i =0; i<contacts.size(); i++ ) {
-      if(contacts.get(i).equals(nom))
+      if(contacts.get(i).getNom().equals(nom))
       return i;
     }
-    return (-1);
+    return -1;
+  }
 
+  public InetAddress getIp(String nom){
+    for (int i =0; i<contacts.size(); i++ ) {
+      if(contacts.get(i).getNom().equals(nom))
+      return contacts.get(i).getIp();
+    }
+    return null;
   }
 
   public int addContact(Connexion c){
@@ -54,7 +62,7 @@ public class ClientUDP {
     messages.add(m);
   }
 
-  public static void main(String[] args) {
+  public void run() {
     ClientUDP cupd = new ClientUDP();
 
     int port = 7201;
@@ -75,7 +83,6 @@ public class ClientUDP {
         // Adresse et port du contact
         InetAddress addr = receivePacket.getAddress();
         int portCo = receivePacket.getPort();
-
         Message message = Message.strToMessage(sentence);
 
         if (message.getType().equals("MSG")){
@@ -86,6 +93,7 @@ public class ClientUDP {
           int position = cupd.isContact(nom);
           if( position == -1)
           {
+            System.out.println(nom);
             Connexion newCo = new Connexion(nom, addr, portCo);
             position = cupd.addContact(newCo);
           }
@@ -100,9 +108,10 @@ public class ClientUDP {
           // on construit l'ack avec le timestamp
           String ack = Message.msgAck(message.getArgs()[0], message.getArgs()[1]).messageToStr();
           byte[] sendData = ack.getBytes();
-          //System.out.println(ack);
+          System.out.println(ack);
           // et on l'envoie
           DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, addr, portCo);
+          serveurSocket.send(sendPacket);
         }
         else if(message.getType().equals("MSG_ACK")){
           Message m = cupd.RemoveMessage(message.getArgs()[1]);
@@ -127,8 +136,6 @@ public class ClientUDP {
     } catch (IOException e) {
       e.printStackTrace();
     }
-
-
 
   }
 

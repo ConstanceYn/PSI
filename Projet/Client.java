@@ -21,7 +21,7 @@ public class Client{
     try {
       String utilisateur = "";
       soc = new Socket("localhost", 1027);
-      socUDP = new DatagramSocket(7201);
+      socUDP = new DatagramSocket(7200);
       System.out.println("Port de communication côté serveur : " + soc.getPort());
 
       //
@@ -31,7 +31,7 @@ public class Client{
       //(je sais pas faire donc pour l'instant je mets juste les étapes)
       //
 
-      ClientUDPRun convRun = new ClientUDPRun();
+      ClientUDP convRun = new ClientUDP();
       Thread t = new Thread(convRun);
       t.start();
 
@@ -62,8 +62,8 @@ public class Client{
       String cinq = "> 5 : Afficher les domaines \n";
       String six = "> 6 : Afficher les annonces d'un domaine \n";
       String sept = "> 7 : Afficher ses annonces \n";
-      String huit = "> 8 : Contacter un annonceur \n";
-      String neuf = "> 9 : deconnexion \n";
+      String huit = "> 8 : Messagerie \n";
+      String neuf = "> 9 : Deconnexion \n";
       String requetes = "\n" +intro +un+ deux + trois + quatre + cinq + six + sept + huit + neuf + ".\n";
 
       System.out.println(requetes);
@@ -71,6 +71,7 @@ public class Client{
       while(continuer)
       {
         //System.out.println(requetes);
+        int action2 = -1;
         int action = userIn.read()-'0';
         String message = null;
 
@@ -137,9 +138,34 @@ public class Client{
             message = Message.requestOwnAnc().messageToStr();
             break;
           case 8: // Demander IP et lancer discussion ?
-            System.out.println("Indiquer l'id de l'annonce qui vous interesse : ");
-            message = userIn.readLine();
-            message = Message.requestIp(userIn.readLine()).messageToStr();
+            String un1 = "> 1 : Contacter un annonceur\n";
+            String de2 = "> 2 : Lire ses messages\n";
+            String tr3 = "> 3 : Envoyer un message\n";
+            System.out.println(intro + un1 + de2 + tr3);
+            userIn.readLine();
+            action2 = userIn.read()-'0';
+            switch(action2) {
+              case 1:
+                System.out.println("Indiquer l'id de l'annonce qui vous interesse : ");
+                message = userIn.readLine();
+                message = Message.requestIp(userIn.readLine()).messageToStr();
+                break;
+              case 2:
+                System.out.println("Indiquer le nom de la personne dont vous souhaiter lire les messages : ");
+                break;
+              case 3:
+                System.out.println("Indiquer le nom de la personne à qui vous souhaiter parler : ");
+                userIn.readLine();
+                String nom = userIn.readLine();
+                System.out.println(nom);
+                InetAddress ia = convRun.getIp(nom);
+                System.out.println(ia);
+                break;
+              default :
+                action2 = -1;
+                //System.out.println("Action inconnue");
+                break ;
+              }
             break;
           case 9: // Deconnexion
             continuer = false;
@@ -148,6 +174,7 @@ public class Client{
 
           default :
             action = -1;
+            action2 = -1;
             //System.out.println("Action inconnue");
             break ;
         }
@@ -173,7 +200,7 @@ public class Client{
                 utilisateur = rep.getArgs()[1];
               }
             }
-            if (action == 8){
+            if (action == 8 && action2 == 1){
               Message rep = Message.strToMessage(reponse);
               System.out.println("Rédigez votre message à " + rep.getArgs()[0] + " :");
               sendMsg(utilisateur, userIn.readLine(), rep.getArgs()[1], socUDP);
@@ -218,7 +245,7 @@ public class Client{
       // Pour l'instant, je pars du principe que le message à moins de 1024 octets
       byte[] mBytes = new byte[1024];
       mBytes = m.messageToStr().getBytes();
-      DatagramPacket dp = new DatagramPacket(mBytes, mBytes.length, InetAddress.getByName(ip), 7200);
+      DatagramPacket dp = new DatagramPacket(mBytes, mBytes.length, InetAddress.getByName(ip), 7201);
       socUDP.send(dp);
       // Ack
       byte[] receiveData = new byte[1024];

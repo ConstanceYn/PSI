@@ -16,4 +16,8 @@ public class Connexion {
   public String getNom(){
     return nom;
   }
+
+  public InetAddress getIp(){
+    return ip;
+  }
 }
