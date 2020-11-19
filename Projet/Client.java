@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 import java.io.BufferedReader;
+import java.sql.Timestamp;
 import java.net.*;
 import java.io.*;
 
@@ -16,9 +17,11 @@ public class Client{
   public static void main(String[] args)
   {
     Socket soc = null;
+    DatagramSocket socUDP = null;
     try {
-
+      String utilisateur = "";
       soc = new Socket("localhost", 1027);
+      socUDP = new DatagramSocket(7201);
       System.out.println("Port de communication côté serveur : " + soc.getPort());
 
       //
@@ -27,9 +30,11 @@ public class Client{
       // le fichier ClientUDP.java
       //(je sais pas faire donc pour l'instant je mets juste les étapes)
       //
+
       ClientUDPRun convRun = new ClientUDPRun();
       Thread t = new Thread(convRun);
       t.start();
+
 
       PrintWriter writer = null; // pour écrire au serveur
       BufferedReader networkIn = new BufferedReader( new InputStreamReader(soc.getInputStream())); // pour lire le serveur
@@ -72,8 +77,9 @@ public class Client{
         switch(action) {
           case 1: // Connection
             System.out.println("Entrez le nom d'utilisateur ou le token : ");
-            message = userIn.readLine();
-            message = Message.connect(userIn.readLine()).messageToStr();
+            userIn.readLine();
+            utilisateur = userIn.readLine();
+            message = Message.connect(utilisateur).messageToStr();
             break;
 
           case 2: // poster une annonce
@@ -161,7 +167,17 @@ public class Client{
             }
             System.out.println("reponse du serveur : ");
             System.out.println(reponse);
-
+            if (action == 1){
+              Message rep = Message.strToMessage(reponse);
+              if (rep.getArgs().length > 1) {
+                utilisateur = rep.getArgs()[1];
+              }
+            }
+            if (action == 8){
+              Message rep = Message.strToMessage(reponse);
+              System.out.println("Rédigez votre message à " + rep.getArgs()[0] + " :");
+              sendMsg(utilisateur, userIn.readLine(), rep.getArgs()[1], socUDP);
+            }
             System.out.println();
 
             System.out.println(requetes);
@@ -182,6 +198,9 @@ public class Client{
       if(soc != null){
         try {
           soc.close();
+          if(socUDP != null){
+            socUDP.close();
+          }
         }
         catch (IOException e) {
           e.printStackTrace();
@@ -190,6 +209,27 @@ public class Client{
       }
     }
 
+  }
+
+  public static void sendMsg(String user, String msg, String ip, DatagramSocket socUDP){
+    try {
+      String time = new Timestamp(System.currentTimeMillis()).toString();
+      Message m = Message.msg(user, time, msg);
+      // Pour l'instant, je pars du principe que le message à moins de 1024 octets
+      byte[] mBytes = new byte[1024];
+      mBytes = m.messageToStr().getBytes();
+      DatagramPacket dp = new DatagramPacket(mBytes, mBytes.length, InetAddress.getByName(ip), 7200);
+      socUDP.send(dp);
+      // Ack
+      byte[] receiveData = new byte[1024];
+      DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+      socUDP.receive(receivePacket);
+      // afficher le message
+      String reponse = new String(receivePacket.getData());
+      System.out.println(reponse);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
 }
