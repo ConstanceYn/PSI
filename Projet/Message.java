@@ -199,12 +199,14 @@ public class Message{
     return new Message("UNKNOWN_REQUEST", new String[0]);
   }
 
-  public static Message msg(){
-    return new Message("MSG", new String[0]);
+  public static Message msg(String em, String time, String msg){
+    String[] args = {em, time, msg};
+    return new Message("MSG", args);
   }
 
-  public static Message msgAck(){
-    return new Message("MSG_ACK", new String[0]);
+  public static Message msgAck(String em, String time){
+    String[] args = {em, time};
+    return new Message("MSG_ACK", args);
   }
 
 }
