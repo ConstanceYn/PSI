@@ -17,14 +17,21 @@ public class test{
     public static void main(String[] args) {
       // test ouverture d'un terminal
 
-      Process proc = null;
       try {
-        String[] cmdss= {"gnome-terminal","-e", "java Envoi"};
-        // String[] cmdss= {"ttab", "java Envoi"};
-        proc = Runtime.getRuntime().exec(cmdss);
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
+        FileWriter fis = new FileWriter("a.txt", true);
+
+        String str = "ceci est un test \n";
+        fis.write(str);
+
+        fis.close();
+
+        FileWriter fis2 = new FileWriter("a.txt", true);
+        str = "ahhhh";
+        fis2.write(str);
+        fis2.close();
+
+      }catch(Exception e)
+      {}
 
     }
 

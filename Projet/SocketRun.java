@@ -403,21 +403,28 @@ public class SocketRun implements Runnable {
       reponse = Message.notConnected();
       return reponse;
     }
-    int id = Integer.parseInt(m.getArgs()[0]);
-    Annonce a = null;
-    for (int i = 0; i < annonces.size(); i++){
-      if (annonces.get(i).getId() == id) {
-        a = annonces.get(i);
+    try {
+
+      int id = Integer.parseInt(m.getArgs()[0]);
+      Annonce a = null;
+      for (int i = 0; i < annonces.size(); i++){
+        if (annonces.get(i).getId() == id) {
+          a = annonces.get(i);
+        }
       }
+      if (a != null) {
+        String ip = a.getUser().getIp().getHostAddress();
+        String nom = a.getUser().getUtilisateur();
+        reponse = Message.requestIpOk(ip, nom);
+      } else {
+        reponse = Message.requestIpKo();
+      }
+      return reponse;
+    }catch(Exception e){
+      // si args[0] n'est pas un int
+      return Message.requestIpKo();
     }
-    if (a != null) {
-      String ip = a.getUser().getIp().getHostAddress();
-      String nom = a.getUser().getUtilisateur();
-      reponse = Message.sendIpOk(ip, nom);
-    } else {
-      reponse = Message.sendIpKo();
-    }
-    return reponse;
+
   }
 
 }

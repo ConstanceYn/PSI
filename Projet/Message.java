@@ -186,13 +186,13 @@ public class Message{
     return new Message("REQUEST_IP", args);
   }
 
-  public static Message sendIpOk(String ip, String user){
+  public static Message requestIpOk(String ip, String user){
     String[] args = {ip, user};
-    return new Message("SEND_IP_OK", args);
+    return new Message("REQUEST_IP_OK", args);
   }
 
-  public static Message sendIpKo(){
-    return new Message("SEND_IP_KO", new String[0]);
+  public static Message requestIpKo(){
+    return new Message("REQUEST_IP_KO", new String[0]);
   }
 
   public static Message unknownRequest(){

@@ -220,9 +220,12 @@ public class Client{
               }
             }
             if (action == 8 && action2 == 1){
-              Message rep = Message.strToMessage(reponse);
-              System.out.println("Rédigez votre message à " + rep.getArgs()[1] + " :");
-              sendMsg(utilisateur, userIn.readLine(), InetAddress.getByName(rep.getArgs()[0]), socUDP);
+              if (! reponse.equals("REQUEST_IP_KO\n.\n")){
+                Message rep = Message.strToMessage(reponse);
+                System.out.println("Rédigez votre message à " + rep.getArgs()[1] + " :");
+                sendMsg(utilisateur, userIn.readLine(), InetAddress.getByName(rep.getArgs()[0]), socUDP);
+
+              }
             }
             System.out.println();
 
