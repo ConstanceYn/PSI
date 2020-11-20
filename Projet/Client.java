@@ -20,7 +20,7 @@ public class Client{
     DatagramSocket socUDP = null;
     try {
       String utilisateur = "";
-      soc = new Socket("localhost", 1027);
+      soc = new Socket("192.168.1.6", 1027);
       socUDP = new DatagramSocket(7201);
 
       System.out.println("Port de communication côté serveur : " + soc.getPort());
@@ -153,7 +153,7 @@ public class Client{
                 userIn.readLine();
                 String name = userIn.readLine();
                 System.out.println(name);
-                if (!convRun.isContact(name)){
+                if (convRun.isContact(name)){
                   readMsg(name);
                 } else {
                   System.out.println("Ce nom ne figure pas dans vos contacts.");
