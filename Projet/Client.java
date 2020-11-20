@@ -237,7 +237,6 @@ public class Client{
       socUDP.close();
     }
     catch (UnknownHostException e){
-      // pour la soc 3 car toto n'existe pas
       e.printStackTrace();
     }
     catch (IOException e){
@@ -269,17 +268,20 @@ public class Client{
       // Pour l'instant, je pars du principe que le message a moins de 1024 octets
       byte[] mBytes = new byte[1024];
       mBytes = m.messageToStr().getBytes();
-      DatagramPacket dp = new DatagramPacket(mBytes, mBytes.length, ip, 7201);
-      socUDP.send(dp);
-      convRun.addMessage(m);
-
-      // Ack
-      // byte[] receiveData = new byte[1024];
-      // DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
-      // socUDP.receive(receivePacket);
-      // // afficher le message
-      // String reponse = new String(receivePacket.getData());
-      // System.out.println(reponse);
+      if (mBytes.length < 1024){
+        DatagramPacket dp = new DatagramPacket(mBytes, mBytes.length, ip, 7201); // ici c'est changé
+        socUDP.send(dp);
+        convRun.addMessage(m);
+        // // Ack
+        // byte[] receiveData = new byte[1024];
+        // DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+        // socUDP.receive(receivePacket);
+        // // afficher le message
+        // String reponse = new String(receivePacket.getData());
+        // System.out.println(reponse);
+      } else {
+        System.out.println("message trop long");
+      }
     } catch (IOException e) {
       e.printStackTrace();
     }
