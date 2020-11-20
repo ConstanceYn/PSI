@@ -152,10 +152,11 @@ public class SocketRun implements Runnable {
       User u = s.getUser(arg0);
       if (u!=null){
         if (u.getConnected())
-        return Message.connectKo();
+          return Message.connectKo();
+
         u.set_connect();
         u.setIp(connection.getInetAddress());
-        this.token = token;
+        this.token = u.getToken();
         return Message.connectOk(this.token, u.getUtilisateur());
       }
       // sinon

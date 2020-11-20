@@ -10,11 +10,16 @@ public class MainServeur{
     int port = 1027;
     ServerSocket serveur = null;
     try {
+      InetAddress ip =  InetAddress.getLocalHost();
+      System.out.println(ip.getHostAddress());
+
+      
       serveur = new ServerSocket(port);
     } catch (IOException e) {
       System.err.println("Echec création socket");
     }
     int nbrConnections = 0;
+
     while(true){
       try {
         Socket connection = serveur.accept();

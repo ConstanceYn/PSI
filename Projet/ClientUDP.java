@@ -7,11 +7,21 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class ClientUDP implements Runnable {
   private ArrayList<Connexion> contacts;
   private ArrayList<Message> messages;
+  private boolean run;
+  private DatagramSocket serveurSocket;
 
-  public ClientUDP() {
+  public ClientUDP(DatagramSocket s) {
     contacts = new ArrayList<Connexion>();
     messages = new ArrayList<Message>(); // liste des messages dont on attend un ack
           // de la forme : MSG \n emetteur \n timestamp \n msg \n.
+    run = true;
+    serveurSocket = s;
+  }
+
+
+  public void stop(){
+    System.out.println("j'ai dit stop");
+    this.run = false;
   }
 
   // return la position dans l'array
@@ -60,16 +70,17 @@ public class ClientUDP implements Runnable {
   public void run() {
     int port = 7201;
 
-    try{
-      DatagramSocket serveurSocket = new DatagramSocket(port);
-      byte[] receiveData = new byte[1024];
+    //DatagramSocket serveurSocket = new DatagramSocket(port);
+    byte[] receiveData = new byte[1024];
 
-      while(true){
-        // attend des messages et les affiches
+    while(this.run){
+      // attend des messages et les affiches
 
-        // recevoir un message du client
+      // recevoir un message du client
+      try {
         DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
         serveurSocket.receive(receivePacket);
+
         String sentence = new String(receivePacket.getData());
         System.out.println(sentence);
 
@@ -99,39 +110,45 @@ public class ClientUDP implements Runnable {
 
           }catch(Exception e){}
 
-          // on construit l'ack avec le timestamp
-          String ack = Message.msgAck(message.getArgs()[0], message.getArgs()[1]).messageToStr();
-          byte[] sendData = ack.getBytes();
-          System.out.println(ack);
-          // et on l'envoie
-          DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, addr, portCo);
-          serveurSocket.send(sendPacket);
-        }
-        else if(message.getType().equals("MSG_ACK")){
-          Message m = this.RemoveMessage(message.getArgs()[1]);
-          String nom = m.getArgs()[0];
-
-          if( !this.isContact(nom))
-          {
-            //System.out.println(nom);
-            Connexion newCo = new Connexion(nom, addr, portCo);
-            this.addContact(newCo);
+            // on construit l'ack avec le timestamp
+            String ack = Message.msgAck(message.getArgs()[0], message.getArgs()[1]).messageToStr();
+            byte[] sendData = ack.getBytes();
+            System.out.println(ack);
+            // et on l'envoie
+            DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, addr, portCo);
+            serveurSocket.send(sendPacket);
           }
+          else if(message.getType().equals("MSG_ACK")){
+            Message m = this.RemoveMessage(message.getArgs()[1]);
+            String nom = m.getArgs()[0];
 
-          try{
-            String nomFile = nom + ".txt";
-            FileWriter fis = new FileWriter(nomFile, true);
-            String str ="moi : " +message.getArgs()[2] + "\n";
-            fis.write(str);
-            fis.close();
+            if( !this.isContact(nom))
+            {
+              //System.out.println(nom);
+              Connexion newCo = new Connexion(nom, addr, portCo);
+              this.addContact(newCo);
+            }
 
-          }catch(Exception e){}
+            try{
+              String nomFile = nom + ".txt";
+              FileWriter fis = new FileWriter(nomFile, true);
+              String str ="moi : " +message.getArgs()[2] + "\n";
+              fis.write(str);
+              fis.close();
 
-        }
+            }catch(Exception e){}
+
+            }
+
+
+      }catch(Exception e){
+        //e.printStackTrace();
       }
-    } catch (IOException e) {
-      e.printStackTrace();
+
+
     }
+    System.out.println("fini ici aussi !!");
+    serveurSocket.close();
 
   }
 

@@ -21,19 +21,17 @@ public class Client{
     try {
       String utilisateur = "";
       soc = new Socket("localhost", 1027);
-      socUDP = new DatagramSocket(7200);
+      socUDP = new DatagramSocket(7201);
+
       System.out.println("Port de communication côté serveur : " + soc.getPort());
+      System.out.println(soc.getInetAddress().toString());
 
-      //
-      //
-      //LANCER LE THREAD UDP
-      // le fichier ClientUDP.java
-      //(je sais pas faire donc pour l'instant je mets juste les étapes)
-      //
-
-      ClientUDP convRun = new ClientUDP();
+      ClientUDP convRun = new ClientUDP(socUDP);
       Thread t = new Thread(convRun);
       t.start();
+
+      // on ouvre la socket UDP après le thread pour que les deux soit sur le même port
+
 
 
       PrintWriter writer = null; // pour écrire au serveur
@@ -234,6 +232,10 @@ public class Client{
         }
 
       }
+      // close
+      System.out.println("on stop avec le serveur ");
+      convRun.stop();
+      socUDP.close();
     }
     catch (UnknownHostException e){
       // pour la soc 3 car toto n'existe pas
@@ -267,7 +269,7 @@ public class Client{
       // Pour l'instant, je pars du principe que le message à moins de 1024 octets
       byte[] mBytes = new byte[1024];
       mBytes = m.messageToStr().getBytes();
-      DatagramPacket dp = new DatagramPacket(mBytes, mBytes.length, ip, 7201);
+      DatagramPacket dp = new DatagramPacket(mBytes, mBytes.length, ip, 7201); // ici c'est changé
       socUDP.send(dp);
       // Ack
       byte[] receiveData = new byte[1024];
