@@ -168,7 +168,7 @@ public class Client{
                 InetAddress ia = convRun.getIp(nom);
                 if (ia != null) {
                   System.out.println("Rédigez votre message à " + nom + " :");
-                  sendMsg(utilisateur, userIn.readLine(), ia, socUDP);
+                  sendMsg(utilisateur, userIn.readLine(), ia, socUDP, convRun);
                 } else {
                   System.out.println("Ce nom ne figure pas dans vos contacts.");
                 }
@@ -220,7 +220,7 @@ public class Client{
               if (! reponse.equals("REQUEST_IP_KO\n.\n")){
                 Message rep = Message.strToMessage(reponse);
                 System.out.println("Rédigez votre message à " + rep.getArgs()[1] + " :");
-                sendMsg(utilisateur, userIn.readLine(), InetAddress.getByName(rep.getArgs()[0]), socUDP);
+                sendMsg(utilisateur, userIn.readLine(), InetAddress.getByName(rep.getArgs()[0]), socUDP, convRun);
 
               }
             }
@@ -261,22 +261,25 @@ public class Client{
 
   }
 
-  public static void sendMsg(String user, String msg, InetAddress ip, DatagramSocket socUDP){
+  public static void sendMsg(String user, String msg, InetAddress ip, DatagramSocket socUDP, ClientUDP convRun){
     try {
       String time = new Timestamp(System.currentTimeMillis()).toString();
       Message m = Message.msg(user, time, msg);
-      // Pour l'instant, je pars du principe que le message à moins de 1024 octets
+
+      // Pour l'instant, je pars du principe que le message a moins de 1024 octets
       byte[] mBytes = new byte[1024];
       mBytes = m.messageToStr().getBytes();
-      DatagramPacket dp = new DatagramPacket(mBytes, mBytes.length, ip, 7201); // ici c'est changé
+      DatagramPacket dp = new DatagramPacket(mBytes, mBytes.length, ip, 7201);
       socUDP.send(dp);
+      convRun.addMessage(m);
+
       // Ack
-      byte[] receiveData = new byte[1024];
-      DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
-      socUDP.receive(receivePacket);
-      // afficher le message
-      String reponse = new String(receivePacket.getData());
-      System.out.println(reponse);
+      // byte[] receiveData = new byte[1024];
+      // DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+      // socUDP.receive(receivePacket);
+      // // afficher le message
+      // String reponse = new String(receivePacket.getData());
+      // System.out.println(reponse);
     } catch (IOException e) {
       e.printStackTrace();
     }
