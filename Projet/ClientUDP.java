@@ -6,23 +6,21 @@ import java.util.concurrent.atomic.AtomicBoolean;
 // comme MainServeur.java mais en udp
 public class ClientUDP implements Runnable {
   private ArrayList<Connexion> contacts;
-  private ArrayList<File> fichiers;
   private ArrayList<Message> messages;
 
   public ClientUDP() {
     contacts = new ArrayList<Connexion>();
-    fichiers = new ArrayList<File>();
     messages = new ArrayList<Message>(); // liste des messages dont on attend un ack
           // de la forme : MSG \n emetteur \n timestamp \n msg \n.
   }
 
   // return la position dans l'array
-  public int isContact(String nom){
+  public boolean isContact(String nom){
     for (int i =0; i<contacts.size(); i++ ) {
       if(contacts.get(i).getNom().equals(nom))
-      return i;
+      return true;
     }
-    return -1;
+    return false;
   }
 
   public InetAddress getIp(String nom){
@@ -33,12 +31,8 @@ public class ClientUDP implements Runnable {
     return null;
   }
 
-  public int addContact(Connexion c){
+  public void addContact(Connexion c){
     contacts.add(c);
-    // quand on ajoute un contact, on ajoute aussi un fichier pour mettre la discussion
-    String str = c.getNom();
-    fichiers.add(new File(str + ".txt") );
-    return (contacts.size()-1);
   }
 
 
@@ -58,6 +52,7 @@ public class ClientUDP implements Runnable {
     }
     return null;
   }
+
   public void addMessage(Message m){
     messages.add(m);
   }
@@ -88,18 +83,19 @@ public class ClientUDP implements Runnable {
           // message[1] = timestamp
           // message[2] = msg
           String nom = message.getArgs()[0];
-          int position = this.isContact(nom);
-          if( position == -1)
+          if( !this.isContact(nom))
           {
-            System.out.println(nom);
+            //System.out.println(nom);
             Connexion newCo = new Connexion(nom, addr, portCo);
-            position = this.addContact(newCo);
+            this.addContact(newCo);
           }
 
           try{
-            FileOutputStream fis = new FileOutputStream(this.fichiers.get(position));
+            String nomFile = nom + ".txt";
+            FileWriter fis = new FileWriter(nomFile, true);
             String str = nom + " : " +message.getArgs()[2] + "\n";
-            fis.write(str.getBytes());
+            fis.write(str);
+            fis.close();
 
           }catch(Exception e){}
 
@@ -114,18 +110,20 @@ public class ClientUDP implements Runnable {
         else if(message.getType().equals("MSG_ACK")){
           Message m = this.RemoveMessage(message.getArgs()[1]);
           String nom = m.getArgs()[0];
-          int position = this.isContact(nom);
-          if( position == -1)
+
+          if( !this.isContact(nom))
           {
-            // on peut recevoir l'ack de qqn à qui on a envoyé un message sans l'ajouter aux contacts ?
-            // je sais pas si c'est possible donc dans le doute je le mets
+            //System.out.println(nom);
             Connexion newCo = new Connexion(nom, addr, portCo);
-            position = this.addContact(newCo);
+            this.addContact(newCo);
           }
+
           try{
-            FileOutputStream fis = new FileOutputStream(this.fichiers.get(position));
-            String str = "moi : " +message.getArgs()[2] + "\n";
-            fis.write(str.getBytes());
+            String nomFile = nom + ".txt";
+            FileWriter fis = new FileWriter(nomFile, true);
+            String str ="moi : " +message.getArgs()[2] + "\n";
+            fis.write(str);
+            fis.close();
 
           }catch(Exception e){}
 

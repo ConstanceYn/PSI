@@ -155,7 +155,7 @@ public class Client{
                 userIn.readLine();
                 String name = userIn.readLine();
                 System.out.println(name);
-                if (convRun.isContact(name) != -1){
+                if (!convRun.isContact(name)){
                   readMsg(name);
                 } else {
                   System.out.println("Ce nom ne figure pas dans vos contacts.");
