@@ -152,6 +152,16 @@ public class Client{
                 break;
               case 2:
                 System.out.println("Indiquer le nom de la personne dont vous souhaiter lire les messages : ");
+                userIn.readLine();
+                String name = userIn.readLine();
+                System.out.println(name);
+                if (convRun.isContact(name) != -1){
+                  readMsg(name);
+                } else {
+                  System.out.println("Ce nom ne figure pas dans vos contacts.");
+                }
+                action = -1;
+                System.out.println(requetes);
                 break;
               case 3:
                 System.out.println("Indiquer le nom de la personne à qui vous souhaiter parler : ");
@@ -159,12 +169,19 @@ public class Client{
                 String nom = userIn.readLine();
                 System.out.println(nom);
                 InetAddress ia = convRun.getIp(nom);
-                System.out.println(ia);
+                if (ia != null) {
+                  System.out.println("Rédigez votre message à " + nom + " :");
+                  sendMsg(utilisateur, userIn.readLine(), ia, socUDP);
+                } else {
+                  System.out.println("Ce nom ne figure pas dans vos contacts.");
+                }
+                action = -1;
+                System.out.println(requetes);
                 break;
               default :
                 action2 = -1;
                 //System.out.println("Action inconnue");
-                break ;
+                break;
               }
             break;
           case 9: // Deconnexion
@@ -183,14 +200,16 @@ public class Client{
           writer.println(message);
           writer.flush();
 
-          if (action != 9)
+          if (action != 9 && action2 < 2)
           {
             //System.out.println("sorti du switch : on attend la réponse");
             content = "";
             String reponse = "";
-            while( !content.equals(".") ){
+            while( content != null && !content.equals(".")){
               content = networkIn.readLine();
-              reponse += content + "\n";
+              if (content != null && !content.equals("")){
+                reponse += content + "\n";
+              }
             }
             System.out.println("reponse du serveur : ");
             System.out.println(reponse);
@@ -202,8 +221,8 @@ public class Client{
             }
             if (action == 8 && action2 == 1){
               Message rep = Message.strToMessage(reponse);
-              System.out.println("Rédigez votre message à " + rep.getArgs()[0] + " :");
-              sendMsg(utilisateur, userIn.readLine(), rep.getArgs()[1], socUDP);
+              System.out.println("Rédigez votre message à " + rep.getArgs()[1] + " :");
+              sendMsg(utilisateur, userIn.readLine(), InetAddress.getByName(rep.getArgs()[0]), socUDP);
             }
             System.out.println();
 
@@ -238,14 +257,14 @@ public class Client{
 
   }
 
-  public static void sendMsg(String user, String msg, String ip, DatagramSocket socUDP){
+  public static void sendMsg(String user, String msg, InetAddress ip, DatagramSocket socUDP){
     try {
       String time = new Timestamp(System.currentTimeMillis()).toString();
       Message m = Message.msg(user, time, msg);
       // Pour l'instant, je pars du principe que le message à moins de 1024 octets
       byte[] mBytes = new byte[1024];
       mBytes = m.messageToStr().getBytes();
-      DatagramPacket dp = new DatagramPacket(mBytes, mBytes.length, InetAddress.getByName(ip), 7201);
+      DatagramPacket dp = new DatagramPacket(mBytes, mBytes.length, ip, 7201);
       socUDP.send(dp);
       // Ack
       byte[] receiveData = new byte[1024];
@@ -259,4 +278,19 @@ public class Client{
     }
   }
 
+  public static void readMsg(String name){
+    BufferedReader read;
+		try {
+			read = new BufferedReader(new FileReader(name + ".txt"));
+			String msg = read.readLine();
+			while (msg != null) {
+				System.out.println(msg);
+				msg = read.readLine();
+			}
+			read.close();
+		} catch (IOException e) {
+      System.out.println("Lecture impossible");
+			e.printStackTrace();
+		}
+  }
 }
