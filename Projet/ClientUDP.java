@@ -113,7 +113,7 @@ public class ClientUDP implements Runnable {
             // on construit l'ack avec le timestamp
             String ack = Message.msgAck(message.getArgs()[0], message.getArgs()[1]).messageToStr();
             byte[] sendData = ack.getBytes();
-            System.out.println(ack);
+            //System.out.println(ack);
             // et on l'envoie
             DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, addr, portCo);
             serveurSocket.send(sendPacket);
@@ -147,7 +147,6 @@ public class ClientUDP implements Runnable {
 
 
     }
-    System.out.println("fini ici aussi !!");
     serveurSocket.close();
 
   }

@@ -232,7 +232,6 @@ public class Client{
 
       }
       // close
-      System.out.println("on stop avec le serveur ");
       convRun.stop();
       socUDP.close();
     }
@@ -264,21 +263,12 @@ public class Client{
     try {
       String time = new Timestamp(System.currentTimeMillis()).toString();
       Message m = Message.msg(user, time, msg);
-
-      // Pour l'instant, je pars du principe que le message a moins de 1024 octets
       byte[] mBytes = new byte[1024];
       mBytes = m.messageToStr().getBytes();
       if (mBytes.length < 1024){
         DatagramPacket dp = new DatagramPacket(mBytes, mBytes.length, ip, 7201); // ici c'est changé
         socUDP.send(dp);
         convRun.addMessage(m);
-        // // Ack
-        // byte[] receiveData = new byte[1024];
-        // DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
-        // socUDP.receive(receivePacket);
-        // // afficher le message
-        // String reponse = new String(receivePacket.getData());
-        // System.out.println(reponse);
       } else {
         System.out.println("message trop long");
       }
