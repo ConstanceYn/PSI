@@ -28,9 +28,11 @@ public class SocketRun implements Runnable {
     try {
       boolean continuer = true;
 
+      /*
       String str = "Bonjour !! Bienvenue sur Good Duck";
       writer.println(str);
       writer.flush();
+      */
 
       while(continuer){
         try {

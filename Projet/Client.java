@@ -20,7 +20,8 @@ public class Client{
     DatagramSocket socUDP = null;
     try {
       String utilisateur = "";
-      soc = new Socket("192.168.1.6", 1027);
+      //"192.168.1.6"
+      soc = new Socket("psi.maiste.fr", 1027);
       socUDP = new DatagramSocket(7201);
 
       System.out.println("Port de communication côté serveur : " + soc.getPort());
@@ -29,7 +30,6 @@ public class Client{
       ClientUDP convRun = new ClientUDP(socUDP);
       Thread t = new Thread(convRun);
       t.start();
-
       // on ouvre la socket UDP après le thread pour que les deux soit sur le même port
 
 
@@ -39,9 +39,8 @@ public class Client{
       // pour lire l'entrée user
       BufferedReader userIn = new BufferedReader(new InputStreamReader(System.in));
 
-
       // message de bienvenue du serveur
-      String msg = networkIn.readLine();
+      String msg = "Bonjour !! Bienvenue sur Good Duck";
       System.out.println(msg);
 
 
